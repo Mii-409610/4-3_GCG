@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
             if(Time.time - lastFireTime >= fireInterval)
             {
                 // カメラオブジェクトを取得
-                GameObject camera = GameObject.Find("Main Camera");
+                GameObject camera = GameObject.Find("PlayerCamera");
 
                 // カメラの前方向を取得
                 Vector3 camForward = camera.transform.forward;

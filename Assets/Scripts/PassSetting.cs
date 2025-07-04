@@ -26,6 +26,9 @@ public class PassSetting : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // ========================================
+        //  初期化処理
+        // ========================================
         // 実行時には非アクティブにする
 #if !UNITY_EDITOR
         gameObject.SetActive(false);
