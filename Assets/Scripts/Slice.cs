@@ -2,9 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EzySlice;
+using System;
+
+[Serializable]
+public struct Cut
+{
+    public int row, col;
+}
+
+[Serializable]
+public class ObjectSliceData
+{
+    public string name;
+    public Cut cut;
+};
 
 public class Slice : MonoBehaviour
 {
+    [SerializeField]
+    private List<ObjectSliceData> data;
+
     [SerializeField, Header("スライスするオブジェクトのプレハブ")]
     private GameObject sliceObject;
 

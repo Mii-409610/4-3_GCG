@@ -7,7 +7,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField, Header("マウスの感度")]
     public float mouseSensitivity = 100.0f;
 
-    [SerializeField, Header("追従する対象")]
+    [SerializeField, Header("追従するカメラオブジェクト")]
     public Transform cameraObject;
 
     // 上下の視点回転を制御するための変数
@@ -16,17 +16,11 @@ public class PlayerCamera : MonoBehaviour
     // 左右の視点回転を制御するための変数
     float yRotation = 0.0f;
 
-    //// 横回転角度制限(最小)
-    //float xAngleLimitMin = -90.0f;
+    // 縦回転角度制限(最小)
+    float yAngleLimitMin = -90.0f;
 
-    //// 横回転角度制限(最大)
-    //float xAngleLimitMax = 90.0f;
-
-    //// 縦回転角度制限(最小)
-    //float yAngleLimitMin = -90.0f;
-
-    //// 縦回転角度制限(最大)
-    //float yAngleLimitMax = 90.0f;
+    // 縦回転角度制限(最大)
+    float yAngleLimitMax = 90.0f;
 
     void Awake()
     {
@@ -46,11 +40,6 @@ public class PlayerCamera : MonoBehaviour
     {
         // マウスカーソルを画面中央にロックして、見えないようにする
         Cursor.lockState = CursorLockMode.Locked;
-
-        //// カメラ角度のリセット
-        //xRotation = 0.0f;
-        //yRotation = cameraObject.eulerAngles.y;
-        //transform.localRotation = Quaternion.Euler(xRotation, 0.0f, 0.0f);
     }
 
     // Update is called once per frame
@@ -58,31 +47,16 @@ public class PlayerCamera : MonoBehaviour
     {
         cameraObject.position = transform.position + Vector3.up;
 
-        // マウスの横方向の移動量を取得し、感度と時間でスケーリング
+        // マウスの移動量を取得
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        // マウスの縦方向の移動量を取得し、感度と時間でスケーリング
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-
-        //// 上下の回転
-        //xRotation -= mouseY;
-        //xRotation = Mathf.Clamp(xRotation, yAngleLimitMin, yAngleLimitMax); // 回転の制限
-
-        //// 左右の回転
-        //yRotation += mouseX;
-        //yRotation=Mathf.Clamp(yRotation, xAngleLimitMin, xAngleLimitMax);　// 回転の制限
-
-        //// カメラの上下回転
-        //transform.localRotation = Quaternion.Euler(xRotation, 0.0f, 0.0f);
-
-        //// プレイヤーの左右回転
-        //cameraObject.rotation = Quaternion.Euler(0.0f, yRotation, 0.0f);
 
         xRotation -= mouseY;
         yRotation += mouseX;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        xRotation = Mathf.Clamp(xRotation, yAngleLimitMin, yAngleLimitMax);
 
         cameraObject.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        transform.rotation = Quaternion.Euler(0, yRotation, 0);
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
     }
 }

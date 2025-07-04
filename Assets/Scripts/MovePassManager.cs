@@ -15,9 +15,6 @@ public class MovePassManager : MonoBehaviour
     // パスオブジェクトの配列
     private PassSetting[] passObjects;
 
-    // 移動するオブジェクトのインスタンス
-    private GameObject moveObjectInstance;
-
     private GameObject fromObject;  // 移動元オブジェクト
     private GameObject toObject;    // 移動先オブジェクト
 
@@ -113,10 +110,11 @@ public class MovePassManager : MonoBehaviour
         SetTime();          // 移動にかかる時間を設定
         SetEasingType();    // 使用するイージングのタイプを設定
 
-        // 移動するオブジェクトのインスタンスを生成
-        moveObjectInstance = Instantiate(moveObject, fromObject.transform.position, Quaternion.identity);
+        // 移動するオブジェクトを生成
+        Vector3 spawnPos = fromObject.transform.position + Vector3.up * 3.0f;
+        moveObject.transform.position = spawnPos;
 
-        foreach(var passObject in passObjects)
+        foreach (var passObject in passObjects)
         {
             if(passObject != null && passLineDraw != null)
             {
@@ -188,9 +186,11 @@ public class MovePassManager : MonoBehaviour
         // 移動先が設定されていない場合は処理を中断
         if (toObject == null) return;
 
+        float yOffset = 3.0f;
+
         // 移動元と移動先の位置を取得
-        Vector3 fromPosition = fromObject.transform.position;
-        Vector3 toPosition = toObject.transform.position;
+        Vector3 fromPosition = fromObject.transform.position + Vector3.up * yOffset;
+        Vector3 toPosition = toObject.transform.position + Vector3.up * yOffset;
 
         float f = 0.0f;                                         // イージングの補間値
         float t = Mathf.Clamp01(easingTotalTime / moveTime);    // イージングの進行度を計算
@@ -205,13 +205,13 @@ public class MovePassManager : MonoBehaviour
         }
 
         // オブジェクトの移動
-        moveObjectInstance.transform.position = Vector3.LerpUnclamped(fromPosition, toPosition, f);
+        moveObject.transform.position = Vector3.LerpUnclamped(fromPosition, toPosition, f);
 
         // イージングの総時間を更新
         easingTotalTime += Time.deltaTime;
 
         // 移動が完了したら次のパスへ進む
-        if (Vector3.Distance(moveObjectInstance.transform.position, toPosition) < 0.01f)
+        if (Vector3.Distance(moveObject.transform.position, toPosition) < 0.01f)
         {
             currentIndex++;
             if(currentIndex < passObjects.Length - 1)

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    [SerializeField,Header("銃のモデル")]
+    public Transform shootPoint;
+
     [SerializeField, Header("弾のモデル")]
     public GameObject bullet;
 
@@ -22,7 +25,7 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -32,7 +35,7 @@ public class Bullet : MonoBehaviour
         if(Input.GetKey(KeyCode.Space))
         {
             // 最後の発射から一定時間たっていれば発射可能
-            if(Time.time - lastFireTime >= fireInterval)
+            if (Time.time - lastFireTime >= fireInterval)
             {
                 // カメラオブジェクトを取得
                 GameObject camera = GameObject.Find("PlayerCamera");
@@ -42,9 +45,9 @@ public class Bullet : MonoBehaviour
 
                 // 弾を出す位置を計算
                 Vector3 pos = transform.position;
-                pos.y += 0.0f;
+                pos.y += 1.0f;
                 pos.z += 0.1f;
-                pos += camForward * 1.0f; 
+                pos += camForward * 1.0f;
 
                 // 弾のプレハブをインスタンス化
                 GameObject copy = Instantiate(
