@@ -128,6 +128,8 @@ public class MovePassManager : MonoBehaviour
         // エラーが発生している場合は処理を中断
         if (errorFlag) return;
 
+        // if (isStart) return;
+
         // オブジェクトの移動処理を呼び出す
         MoveObject();
     }

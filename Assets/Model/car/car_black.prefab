@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_LocalScale.y
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_LocalScale.z
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8f542c67f496c9b45b6d4ce7325eeb3f, type: 3}
       propertyPath: m_Name
-      value: car_brack
+      value: car_black
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

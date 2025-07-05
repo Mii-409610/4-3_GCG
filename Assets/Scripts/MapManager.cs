@@ -29,12 +29,12 @@ public class MapManager : MonoBehaviour
     {
         Instantiate(RoadObject);
         Instantiate(LandObject);
-        Instantiate(RoadObject, new Vector3(117.0f, 0.0f,   0.0f), Quaternion.identity);
-        Instantiate(LandObject, new Vector3(117.0f, 0.0f,   0.0f), Quaternion.identity);
-        Instantiate(RoadObject, new Vector3(  0.0f, 0.0f, 117.0f), Quaternion.identity);
-        Instantiate(LandObject, new Vector3(  0.0f, 0.0f, 117.0f), Quaternion.identity);
-        Instantiate(RoadObject, new Vector3(117.0f, 0.0f, 117.0f), Quaternion.identity);
-        Instantiate(LandObject, new Vector3(117.0f, 0.0f, 117.0f), Quaternion.identity);
+        Instantiate(RoadObject, new Vector3(121.0f, 0.0f,   0.0f), Quaternion.identity);
+        Instantiate(LandObject, new Vector3(121.0f, 0.0f,   0.0f), Quaternion.identity);
+        Instantiate(RoadObject, new Vector3(  0.0f, 0.0f, 121.0f), Quaternion.identity);
+        Instantiate(LandObject, new Vector3(  0.0f, 0.0f, 121.0f), Quaternion.identity);
+        Instantiate(RoadObject, new Vector3(121.0f, 0.0f, 121.0f), Quaternion.identity);
+        Instantiate(LandObject, new Vector3(121.0f, 0.0f, 121.0f), Quaternion.identity);
     }
 
     // Update is called once per frame
