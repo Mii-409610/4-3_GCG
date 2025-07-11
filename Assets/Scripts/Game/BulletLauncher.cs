@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletCannon : MonoBehaviour
+public class BulletLauncher : MonoBehaviour
 {
     public GameObject bullet;        // キャノン弾のプレハブ
     public float speed = 30f;        // 発射速度
