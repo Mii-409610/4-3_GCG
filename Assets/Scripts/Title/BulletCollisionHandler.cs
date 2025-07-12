@@ -24,7 +24,7 @@ public class BulletCollisionHandler : MonoBehaviour
             switch (type)
             {
                 case ButtonType.Start:
-                    FindObjectOfType<SceneChanger>()?.ChangeScene("Debug");
+                    FindObjectOfType<SceneChanger>()?.ChangeScene("StageSelect");
                     break;
                 case ButtonType.Exit:
 #if UNITY_EDITOR

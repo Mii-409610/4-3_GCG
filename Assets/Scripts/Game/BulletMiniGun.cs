@@ -42,6 +42,9 @@ public class BulletMiniGun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 挙動を一時停止
+        if (IsGameManager.isGameEnded) return;
+
         // スペースキーが押されている間
         if (Input.GetKeyDown(KeyCode.Space))
         {

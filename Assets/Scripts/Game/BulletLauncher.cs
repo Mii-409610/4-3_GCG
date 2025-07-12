@@ -34,6 +34,9 @@ public class BulletLauncher : MonoBehaviour
 
     void FireCannon()
     {
+        // ‹““®‚ğˆê’â~
+        if (IsGameManager.isGameEnded) return;
+
         // ƒJƒƒ‰‚Ì³–Ê•ûŒü‚ÆˆÊ’u‚ğæ“¾
         GameObject cam = GameObject.Find("PlayerCamera");
         Vector3 forward = cam.transform.forward;

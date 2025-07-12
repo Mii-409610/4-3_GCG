@@ -21,6 +21,9 @@ public class WeaponSwitcher : MonoBehaviour
 
     void Update()
     {
+        // ‹““®‚ðˆêŽž’âŽ~
+        if (IsGameManager.isGameEnded) return;
+
         HandleWeaponSwitchInput();
     }
 

@@ -37,8 +37,11 @@ public class BulletShotgun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if (Input.GetKeyDown(KeyCode.Space))
-       {
+        // 挙動を一時停止
+        if (IsGameManager.isGameEnded) return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             // カメラオブジェクトを取得
             GameObject cam = GameObject.Find("PlayerCamera");
 
@@ -78,6 +81,6 @@ public class BulletShotgun : MonoBehaviour
                     audioSource.PlayOneShot(shotSE);
                 }
             }
-       }
+        }
     }
 }
