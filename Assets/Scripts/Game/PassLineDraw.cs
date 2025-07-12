@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// パスとパスの間の線描画用クラス
+/// </summary>
 public class PassLineDraw : MonoBehaviour
 {
     [SerializeField, Header("線の太さ"), Range(0.0f, 1.0f)]

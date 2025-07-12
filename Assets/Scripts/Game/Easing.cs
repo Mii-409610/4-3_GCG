@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// イージングのクラス
+/// </summary>
 public class Easing : MonoBehaviour
 {
     /// <summary>

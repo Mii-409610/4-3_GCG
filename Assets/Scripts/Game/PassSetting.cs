@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// パス設置するクラス
+/// </summary>
 public class PassSetting : MonoBehaviour
 {
     /// <summary>

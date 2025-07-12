@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Launcherのクラス
+/// </summary>
 public class BulletLauncher : MonoBehaviour
 {
     public GameObject bullet;        // キャノン弾のプレハブ

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Shotgun‚ÌƒNƒ‰ƒX
+/// </summary>
 public class BulletShotgun : MonoBehaviour
 {
     [SerializeField, Header("’e‚Ìƒ‚ƒfƒ‹")]

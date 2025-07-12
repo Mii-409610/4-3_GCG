@@ -4,6 +4,9 @@ using System.Drawing;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
+/// <summary>
+/// MiniGunのクラス
+/// </summary>
 public class BulletMiniGun : MonoBehaviour
 {
     [SerializeField, Header("銃口")]
@@ -32,7 +35,7 @@ public class BulletMiniGun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // カメラをシーン内から取得（Main Cameraという名前で探す）
+        // カメラをシーン内から取得
         playerCam = GameObject.Find("PlayerCamera");
     }
 

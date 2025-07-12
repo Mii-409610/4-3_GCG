@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 地面設置用クラス
+/// </summary>
+// デバック描画用
 //[ExecuteAlways]
 public class MapManager : MonoBehaviour
 {

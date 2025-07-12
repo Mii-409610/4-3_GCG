@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 視点操作のクラス
+/// </summary>
 public class CameraController : MonoBehaviour
 {
     [SerializeField, Header("カメラの感度")]
@@ -22,6 +25,12 @@ public class CameraController : MonoBehaviour
 
     private float yRotationVelocity;    // 左右の加速度
     private float xRotationVelocity;    // 上下の加速度
+
+    void Start()
+    {
+        // カーソルをデフォルトに戻す
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
 
     void Update()
     {

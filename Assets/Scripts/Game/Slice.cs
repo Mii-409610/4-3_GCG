@@ -17,6 +17,9 @@ public class ObjectSliceData
     public Cut cut;
 };
 
+/// <summary>
+/// 破壊オブジェクト分割するクラス
+/// </summary>
 public class Slice : MonoBehaviour
 {
     [SerializeField]

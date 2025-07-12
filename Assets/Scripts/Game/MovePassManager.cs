@@ -1,6 +1,9 @@
 using System.Data;
 using UnityEngine;
 
+/// <summary>
+/// パス移動のクラス
+/// </summary>
 public class MovePassManager : MonoBehaviour
 {
     [SerializeField, Header("移動するオブジェクト")]
