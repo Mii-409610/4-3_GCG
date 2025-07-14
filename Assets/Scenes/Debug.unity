@@ -2639,6 +2639,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 674472113808107461, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 26e6d94fa0ce6bf489e5cbe83068ccc6, type: 2}
+    - target: {fileID: 4670995514341429595, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4670995514341429595, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 26e6d94fa0ce6bf489e5cbe83068ccc6, type: 2}
+    - target: {fileID: 6587638044198680084, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 26e6d94fa0ce6bf489e5cbe83068ccc6, type: 2}
     - target: {fileID: 7718864824945331496, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
       propertyPath: m_Name
       value: ScoreManager
@@ -2735,7 +2751,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8999431192256439442, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 2100000, guid: 26e6d94fa0ce6bf489e5cbe83068ccc6, type: 2}
+    - target: {fileID: 9095014679288975077, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 2100000, guid: 26e6d94fa0ce6bf489e5cbe83068ccc6, type: 2}
+    - target: {fileID: 9177974960399890528, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
+      propertyPath: material
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4026965439135619246, guid: 6a2af0c0c3fb9b948a8e0551e9a0f799, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

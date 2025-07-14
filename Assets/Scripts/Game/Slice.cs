@@ -2,33 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using EzySlice;
-using System;
-
-[Serializable]
-public struct Cut
-{
-    public int row, col;
-}
-
-[Serializable]
-public class ObjectSliceData
-{
-    public string name;
-    public Cut cut;
-};
 
 /// <summary>
 /// 破壊オブジェクト分割するクラス
 /// </summary>
 public class Slice : MonoBehaviour
 {
-    [SerializeField]
-    private List<ObjectSliceData> data;
-
-    [SerializeField, Header("スライスするオブジェクトのプレハブ")]
-    private GameObject sliceObject;
-
-    [SerializeField,Header("断面に使用するマテリアル")]
+    [SerializeField,Header("切断面のマテリアル")]
     private Material sliceMaterial;
 
     [SerializeField, Header("スライスする回数")]
@@ -37,33 +17,18 @@ public class Slice : MonoBehaviour
     [SerializeField, Header("スライスの軸方向(X,Y,Z)")]
     Vector3[] sliceAxes;
 
-    [SerializeField, Header("Rigidbodyコンポーネント追加の有無")]
-    private bool addRigidbody;
-
     //切断オブジェクト
     private SlicedHull slicedHulls;
 
-    // 元のオブジェクトリスト
+    // スライス対象と結果のリスト
     private List<GameObject> sliceSourceObjectList;
-
-    // 切断後のオブジェクトリスト
     private List<GameObject> sliceTragetObjectList;
-
-    // エラーが発生したかどうか
-    private bool errorFlag;
 
     private void Awake()
     {
         // ========================================
         //  エラー処理
         // ========================================
-        if(sliceObject == null)
-        {
-            Debug.LogError("切断するオブジェクトが設定されていません。");
-            errorFlag = true;
-            return;
-        }
-
         if (sliceCount <= 0)
         {
             Debug.LogWarning("スライス回数が0なので、切断されません。");
@@ -79,16 +44,15 @@ public class Slice : MonoBehaviour
         // ========================================
         sliceSourceObjectList = new List<GameObject>();
         sliceTragetObjectList = new List<GameObject>();
+
+        //sliceMaterial = GetComponent<Renderer>().material;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        // エラーが発生している場合は処理を中断
-        if (errorFlag) return;
-
-        // 元のオブジェクトをリストに追加
-        sliceSourceObjectList.Add(Instantiate(sliceObject));
+        // 自分自身をスライス対象に追加
+        sliceSourceObjectList.Add(gameObject);
 
         // ========================================
         //  切断処理
@@ -111,34 +75,39 @@ public class Slice : MonoBehaviour
 
         // 切断後のオブジェクトをまとめる親オブジェクトを作成
         GameObject slicedObjectParent = new GameObject("SlicedObjects");
+        slicedObjectParent.transform.position = transform.position;
+
+        // コルーチンをすべてを待機するためのリスト
+        List<Coroutine> delayedCoriutines = new List<Coroutine>();
 
         foreach(var obj in sliceSourceObjectList)
         {
+            // MEMO: コルーチン合っても無くてもどっちでもいける（ようわからん）
             // 各オブジェクトにMeshColliderを追加
             MeshCollider collider = obj.AddComponent<MeshCollider>();
             collider.convex = true;     // メッシュコライダーを凸形状に設定
-            collider.enabled = false;   // 初期状態では無効化
+            collider.enabled = true;   // 初期状態では無効化
 
             // Rigidbodyを追加する場合
             Rigidbody rb = null;
-            if(addRigidbody)
-            {
-                rb = obj.AddComponent<Rigidbody>();
-                rb.useGravity = false;  // 重力を無効化
-                rb.isKinematic = true;  // 初期状態ではキネマティックに設定
-            }
+            rb = obj.AddComponent<Rigidbody>();
+            rb.useGravity = false;  // 重力を無効化
+            rb.isKinematic = true;  // 初期状態ではキネマティックに設定
+
+            obj.AddComponent<ActivatePhysicsOnHit>();
+
+            // 親オブジェクトの子に設定
             obj.transform.SetParent(slicedObjectParent.transform);
 
             // 0.1秒後に有効化
             StartCoroutine(EnablePhysicsDelayed(obj, collider, rb, 0.1f));
         }
 
-        // 元のオブジェクトリストをクリア
-        sliceSourceObjectList.Clear();
+        Destroy(gameObject);
     }
 
     /// <summary>
-    /// 指定した軸に沿って、元オブジェクトリスト内の各オブジェクトをスライス
+    /// 軸に沿って、各オブジェクトをスライス
     /// </summary>
     /// <param name="sliceAxis">スライスに使用する軸方向</param>
     private void SliceObject(Vector3 sliceAxis)
@@ -151,23 +120,21 @@ public class Slice : MonoBehaviour
             // オブジェクトをスライス
             slicedHulls = sliceObject.Slice(position: center, direction: sliceAxis);
 
-            if(slicedHulls != null)
+            if (slicedHulls != null)
             {
-                // スライスが成功した場合、上部ハルと下部ハルを生成
                 GameObject upperHull = slicedHulls.CreateUpperHull(sliceObject, sliceMaterial);
                 GameObject lowerHull = slicedHulls.CreateLowerHull(sliceObject, sliceMaterial);
 
-                // 元のオブジェクトを削除
                 Destroy(sliceObject);
 
-                if(upperHull != null)
+                if (upperHull != null)
                 {
                     upperHull.name = (sliceTragetObjectList.Count + 1).ToString();
                     // 上部ハルを切断後のリストに追加
                     sliceTragetObjectList.Add(upperHull);
                 }
 
-                if(lowerHull != null)
+                if (lowerHull != null)
                 {
                     lowerHull.name = (sliceTragetObjectList.Count + 1).ToString();
                     // 下部ハルを切断後のリストに追加
@@ -176,7 +143,7 @@ public class Slice : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("スライスに失敗しました。オブジェクト：" + sliceObject.name);
+                Debug.LogWarning("スライスに失敗: " + sliceObject.name);
             }
         }
         sliceSourceObjectList.Clear();                          // 元のオブジェクトリストをクリア
@@ -185,7 +152,7 @@ public class Slice : MonoBehaviour
     }
 
     /// <summary>
-    /// コライダーとリジッドボディを遅延有効化するコルーチン
+    /// 遅延して物理挙動を有効化
     /// </summary>
     /// <param name="obj">対象のゲームオブジェクト</param>
     /// <param name="collider">対象のMeshCollider</param>
@@ -194,6 +161,8 @@ public class Slice : MonoBehaviour
     /// <returns></returns>
     IEnumerator EnablePhysicsDelayed(GameObject obj, MeshCollider collider, Rigidbody rb, float delay)
     {
+        Debug.Log("コルーチン開始");
+
         // 指定した時間待機
         yield return new WaitForSeconds(delay);
 
