@@ -221,7 +221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &1019391181
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -321,6 +321,50 @@ PrefabInstance:
       propertyPath: m_Name
       value: car_red
       objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6018580190728658048, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -335,7 +379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalRotation.x
@@ -343,7 +387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalRotation.z
@@ -355,7 +399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6626623509736500696, guid: 4d08776742e16f146bfaba1c741df824, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -386,11 +430,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dabbc7143f3bb9e48a25b60919c5bd0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliceCount: 0
+  sliceMaterial: {fileID: 2100000, guid: 2912a31033c3d6843946090a4fefabf9, type: 2}
+  sliceCount: 1
   sliceAxes:
-  - {x: 7, y: 0, z: 0}
-  - {x: 0, y: 7, z: 0}
-  - {x: 0, y: 0, z: 7}
+  - {x: 1, y: 0, z: 0}
+  - {x: 0, y: 1, z: 0}
+  - {x: 0, y: 0, z: 1}
 --- !u!1 &1889789350
 GameObject:
   m_ObjectHideFlags: 0
