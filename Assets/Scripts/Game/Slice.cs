@@ -4,18 +4,25 @@ using UnityEngine;
 using EzySlice;
 
 /// <summary>
-/// 破壊オブジェクト分割するクラス
+/// 軸ごとにスライス回数を指定してオブジェクトを分割するクラス
 /// </summary>
 public class Slice : MonoBehaviour
 {
+    [System.Serializable]
+    public struct AxisSliceSetting
+    {
+        [Header("スライスの軸方向(X,Y,Z)")]
+        public Vector3 axis;
+
+        [Header("この軸でのスライス回数")]
+        public int sliceCount;
+    }
+
     [SerializeField,Header("切断面のマテリアル")]
     private Material sliceMaterial;
 
-    [SerializeField, Header("スライスする回数")]
-    private int sliceCount;
-
-    [SerializeField, Header("スライスの軸方向(X,Y,Z)")]
-    Vector3[] sliceAxes;
+    [SerializeField, Header("各軸ごとのスライス設定")]
+    private AxisSliceSetting[] sliceSettings;
 
     //切断オブジェクト
     private SlicedHull slicedHulls;
@@ -29,14 +36,9 @@ public class Slice : MonoBehaviour
         // ========================================
         //  エラー処理
         // ========================================
-        if (sliceCount <= 0)
+        if ((sliceSettings == null || sliceSettings.Length == 0))
         {
-            Debug.LogWarning("スライス回数が0なので、切断されません。");
-        }
-
-        if (sliceAxes.Length <= 0)
-        {
-            Debug.LogWarning("スライスの軸方向が設定されていないため、切断されません。");
+            Debug.LogWarning("スライス設定がありません。切断されません。");
         }
 
         // ========================================
@@ -44,8 +46,6 @@ public class Slice : MonoBehaviour
         // ========================================
         sliceSourceObjectList = new List<GameObject>();
         sliceTragetObjectList = new List<GameObject>();
-
-        //sliceMaterial = GetComponent<Renderer>().material;
     }
 
     // Start is called before the first frame update
@@ -57,15 +57,13 @@ public class Slice : MonoBehaviour
         // ========================================
         //  切断処理
         // ========================================
-        foreach(var axis in sliceAxes)
+        foreach (var setting in sliceSettings)
         {
-            // 各軸を正規化
-            axis.Normalize();
+            Vector3 normAxis = setting.axis.normalized;
 
-            for(int i = 0; i < sliceCount; i++)
+            for (int i = 0; i < setting.sliceCount; i++)
             {
-                // 指定した軸に沿ってオブジェクトをスライス
-                SliceObject(axis);
+                SliceObject(normAxis);
             }
         }
 
@@ -89,8 +87,7 @@ public class Slice : MonoBehaviour
             collider.enabled = true;   // 初期状態では無効化
 
             // Rigidbodyを追加する場合
-            Rigidbody rb = null;
-            rb = obj.AddComponent<Rigidbody>();
+            Rigidbody rb = obj.AddComponent<Rigidbody>();
             rb.useGravity = false;  // 重力を無効化
             rb.isKinematic = true;  // 初期状態ではキネマティックに設定
 
