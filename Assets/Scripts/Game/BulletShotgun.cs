@@ -1,86 +1,98 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-/// <summary>
-/// Shotgunのクラス
-/// </summary>
-public class BulletShotgun : MonoBehaviour
+public class BulletShotgun : MonoBehaviour, IWeaponControl
 {
-    [SerializeField, Header("弾のモデル")]
-    public GameObject bullet;
+    [Header("弾設定")]
+    public GameObject bullet;           // 弾のプレハブ
+    public float speed = 0.0f;         // 弾の速さ
+    public float deletetime = 0.0f;     // 弾の寿命
+    public int maxAmmo = 5;             // 最大弾数（例：5発）
+    private int currentAmmo;            // 現在弾数
+    public float verticalAngle = 0.0f;    // 未使用（上下角）
+    public float horizontalAngle = 0.0f;  // 未使用（左右角）
 
-    // public GameBalanceLoader balanceLoader; //JSONファイル読み込みのプレハブ
+    [Header("弾数・リロード設定")]
+    public float reloadTime = 2.0f;       // リロード時間（秒）
+    private bool isReloading = false;   // リロード中フラグ
 
-    [SerializeField, Header("弾の速さ")]
-    public float speed = 0.0f; // 弾の速さ
+    [Header("UI")]
+    public Image reloadGauge;
 
-    [SerializeField, Header("弾の消える時間")]
-    public float deletetime = 0.0f;
-
-    [SerializeField, Header("発射音")]
+    [Header("効果音")]
     public AudioClip shotSE;
-
-    // 音を鳴らすためのAudioAource
     private AudioSource audioSource;
+
+    private bool isCurrentWeapon = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // AudioSourceを取得
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-        }
+        currentAmmo = maxAmmo;
+        audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+        if (reloadGauge != null)
+            reloadGauge.fillAmount = 1f;
+    }
+
+    public void SetWeaponActive(bool isActive)
+    {
+        isCurrentWeapon = isActive;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // 挙動を一時停止
-        if (IsGameManager.isGameEnded) return;
+        if (!isCurrentWeapon || isReloading) return;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // カメラオブジェクトを取得
-            GameObject cam = GameObject.Find("PlayerCamera");
+            if (currentAmmo <= 0) return;
+            FireShotgun();
+        }
+    }
 
-            // カメラ方向を取得
-            Vector3 forward = cam.transform.forward;    // 正面
-            Vector3 up = cam.transform.up;              // 上
-            Vector3 right = cam.transform.right;        // 右
+    void FireShotgun()
+    {
+        currentAmmo--;
+        Vector3 basePos = transform.position + Camera.main.transform.forward * 4f + Vector3.up * 1.5f;
+        Vector3 baseDir = Camera.main.transform.forward;
 
-            // 発射位置の中心
-            Vector3 basePos = transform.position + forward * 1.0f + Vector3.up * 1.5f;
-
-            float offset = 0.2f; // 上下左右の間隔
-
-            for (int y = -1; y <= 1; y++) // 上中下
+        for (int y = -1; y <= 1; y++)
+        {
+            for (int x = -1; x <= 1; x++)
             {
-                for (int x = -1; x <= 1; x++) // 上中下の3発
-                {
-                    // ばらけた位置を計算
-                    Vector3 spawnPos = basePos + up * y * offset + right * x * offset;
-
-                    // 弾を生成
-                    GameObject copy = Instantiate(bullet, spawnPos, Quaternion.LookRotation(forward));
-
-                    // 弾のRigidbodyを取得
-                    Rigidbody rb = copy.GetComponent<Rigidbody>();
-
-                    // 前方向にスピードを掛ける
-                    rb.velocity = forward * speed;
-
-                    // 弾の消滅
-                    Destroy(copy, deletetime);
-                }
-
-                // 発射音が設定されていれば再生
-                if (shotSE != null)
-                {
-                    audioSource.PlayOneShot(shotSE);
-                }
+                Vector3 spreadDir = baseDir + Camera.main.transform.up * y * 0.3f + Camera.main.transform.right * x * 0.1f;
+                spreadDir.Normalize();
+                GameObject b = Instantiate(bullet, basePos, Quaternion.LookRotation(spreadDir));
+                b.GetComponent<Rigidbody>().velocity = spreadDir * speed;
+                Destroy(b, deletetime);
             }
         }
+
+        if (shotSE != null)
+            audioSource.PlayOneShot(shotSE);
+
+        if (currentAmmo <= 0 && !isReloading)
+            StartCoroutine(Reload());
+    }
+
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        float timer = 0f;
+        reloadGauge.fillAmount = 0f;
+
+        while (timer < reloadTime)
+        {
+            timer += Time.deltaTime;
+            reloadGauge.fillAmount = Mathf.Clamp01(timer / reloadTime);
+            yield return null;
+        }
+
+        currentAmmo = maxAmmo;
+        isReloading = false;
+        reloadGauge.fillAmount = 1f;
     }
 }
