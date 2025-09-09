@@ -11,6 +11,16 @@ public class WeaponSwitcher : MonoBehaviour
     [SerializeField, Header("切り替え対象となる武器を登録")]
     public GameObject[] weapons;
 
+    [SerializeField, Header("武器選択中UI")]
+    public GameObject[] selectedWeaponUIs;
+
+    [SerializeField, Header("武器UI")]
+    public GameObject[] weaponUIs;
+
+    [SerializeField, Header("非選択時のUI半透明度")]
+    [Range(0f, 1f)]
+    public float fadedAlpha = 0.5f;
+
     // 現在の武器のインデックス
     private int currentWeaponIndex = 1;
 
@@ -69,11 +79,35 @@ public class WeaponSwitcher : MonoBehaviour
             bool isActive = (i == index);
             weapons[i].SetActive(isActive);
 
-            // 必要に応じてWeapon_Modelやエフェクトもここで切り替え可
-
             // 切り替えた武器名をデバック出力
             if (isActive)
                 Debug.Log("現在の武器: " + weapons[i].name);
+        }
+
+        // 選択中UIの制御
+        if (selectedWeaponUIs != null && selectedWeaponUIs.Length == weapons.Length)
+        {
+            for(int i = 0; i < selectedWeaponUIs.Length; i++)
+            {
+                // 選択中の武器UIだけアクティブ化
+                selectedWeaponUIs[i].SetActive(i == index);
+            }
+        }
+
+        // 武器UIの透明度制御
+        if (weaponUIs != null && weaponUIs.Length == weapons.Length)
+        {
+            for (int i = 0; i < weaponUIs.Length; i++)
+            {
+                // 選択中:不透明, それ以外:半透明
+                var images = weaponUIs[i].GetComponentsInChildren<Image>(true);
+                foreach (var img in images)
+                {
+                    Color c = img.color;
+                    c.a = (i == index) ? 1f : fadedAlpha;
+                    img.color = c;
+                }
+            }
         }
 
         // 現在の武器インデックスを更新

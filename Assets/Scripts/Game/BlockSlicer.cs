@@ -137,6 +137,8 @@ public class BlockSlicer : MonoBehaviour
                         float zStart = boxCenter.z - boxSize.z / 2f;
                         float zPos = zStart + boxSize.z * ratio;
                         slicePosWorld = new Vector3(boxCenter.x, boxCenter.y, zPos);
+
+                        Debug.Log("ZŽ²•ªŠ„: " + slicePosWorld);
                     }
                     else
                     {
