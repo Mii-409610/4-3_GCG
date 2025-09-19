@@ -25,7 +25,7 @@ public class BlockSlicer : MonoBehaviour
     private AxisSliceSetting[] sliceSettings;
 
     [SerializeField, Header("分割ブロックの質量")]
-    private float blockMass = 5.0f;
+    private float blockMass = 300.0f;
 
     // 分割対象オブジェクトリスト
     private List<GameObject> sliceSourceObjectList;
@@ -85,9 +85,9 @@ public class BlockSlicer : MonoBehaviour
             box = gameObject.AddComponent<BoxCollider>();
         }
 
-        // BoxColliderの中心とサイズをワールド座標で取得
-        Vector3 boxCenter = transform.TransformPoint(box.center);
-        Vector3 boxSize = Vector3.Scale(box.size, transform.lossyScale);
+        // BoxColliderの中心とサイズはローカル座標で取得
+        Vector3 boxCenter = box.center;
+        Vector3 boxSize = box.size;
 
         // 各軸ごとに分割処理
         foreach (var setting in sliceSettings)
@@ -108,59 +108,57 @@ public class BlockSlicer : MonoBehaviour
 
                 for (int i = 1; i <= sliceCount; i++)
                 {
-                    // 分割面の位置を算出
                     float ratio = (float)i / blockCount;
 
-                    // 分割面の法線(ローカル基準→ワールド基準へ変換)
+                    // 分割面の法線（ローカル座標系で取得）
                     Vector3 localNormal = setting.axis.normalized;
-                    Vector3 worldNormal = transform.TransformDirection(localNormal);
+                    Vector3 worldNormal = block.transform.TransformDirection(localNormal);
 
-                    // 分割面のワールド座標位置
-                    Vector3 slicePosWorld;
+                    // 分割面のローカル座標位置
+                    Vector3 slicePosLocal;
                     if (Mathf.Abs(localNormal.x) > 0.99f)
                     {
                         // X軸分割
                         float xStart = boxCenter.x - boxSize.x / 2f;
                         float xPos = xStart + boxSize.x * ratio;
-                        slicePosWorld = new Vector3(xPos, boxCenter.y, boxCenter.z);
+                        slicePosLocal = new Vector3(xPos, boxCenter.y, boxCenter.z);
                     }
                     else if (Mathf.Abs(localNormal.y) > 0.99f)
                     {
                         // Y軸分割
                         float yStart = boxCenter.y - boxSize.y / 2f;
                         float yPos = yStart + boxSize.y * ratio;
-                        slicePosWorld = new Vector3(boxCenter.x, yPos, boxCenter.z);
+                        slicePosLocal = new Vector3(boxCenter.x, yPos, boxCenter.z);
                     }
                     else if (Mathf.Abs(localNormal.z) > 0.99f)
                     {
                         // Z軸分割
                         float zStart = boxCenter.z - boxSize.z / 2f;
                         float zPos = zStart + boxSize.z * ratio;
-                        slicePosWorld = new Vector3(boxCenter.x, boxCenter.y, zPos);
+                        slicePosLocal = new Vector3(boxCenter.x, boxCenter.y, zPos);
 
-                        Debug.Log("Z軸分割: " + slicePosWorld);
+                        //Debug.Log("Z軸分割: " + slicePosLocal);
                     }
                     else
                     {
-                        // 軸ベクトルが不正の場合は警告
                         Debug.LogWarning("軸ベクトルが不正: " + localNormal);
                         continue;
                     }
+
+                    // slicePosLocalを分割対象ブロックのワールド座標へ変換
+                    Vector3 slicePosWorld = block.transform.TransformPoint(slicePosLocal);
 
                     // 新しい分割結果リスト
                     List<GameObject> newDivided = new List<GameObject>();
                     foreach (var obj in dividedBlocks)
                     {
-                        // 分割実行(分割面位置、分割面法線、マテリアル指定)
                         SlicedHull hull = obj.Slice(slicePosWorld, worldNormal, sliceMaterial);
 
                         if (hull != null)
                         {
-                            // 分割後の上下パーツ生成
                             GameObject upper = hull.CreateUpperHull(obj, sliceMaterial);
                             GameObject lower = hull.CreateLowerHull(obj, sliceMaterial);
 
-                            // 元オブジェクトのTransformを引き継ぐ
                             if (upper != null)
                             {
                                 upper.transform.position = obj.transform.position;
@@ -175,23 +173,17 @@ public class BlockSlicer : MonoBehaviour
                                 lower.transform.localScale = obj.transform.localScale;
                                 newDivided.Add(lower);
                             }
-                            // 元オブジェクト削除
                             Destroy(obj);
                         }
                         else
                         {
-                            // 分割失敗時はそのまま保持
                             newDivided.Add(obj);
-                            //Debug.LogWarning("分割に失敗しました。オブジェクトをそのまま保持します。");
                         }
                     }
-                    // 分割済みリストを更新
                     dividedBlocks = newDivided;
                 }
-                // 分割後のブロックを次のリストへ
                 nextSourceList.AddRange(dividedBlocks);
             }
-            // 分割対象リストを更新
             sliceSourceObjectList = nextSourceList;
         }
     }
