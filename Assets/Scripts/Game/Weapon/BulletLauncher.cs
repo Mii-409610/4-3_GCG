@@ -20,10 +20,16 @@ public class BulletLauncher : MonoBehaviour
     public float shootForce = 0.0f;     // 弾の発射速度
     public float deleteTime = 0.0f;     // 弾の寿命(秒)
     public int maxCapacity = 5;         // 最大弾数
+    public float fireInterval = 1.5f;   // 発射間隔
 
     [SerializeField, Header("リロード設定")]
     public float reloadTime = 2.0f;     // リロード所要時間(秒)
-    
+
+    [SerializeField, Header("反動設定")]
+    public Transform recoilTarget;              // 銃のモデル
+    public float recoilRotationStrength = 5.0f; // 反動の強さ(回転)
+    public float recoilReturnSpeed = 8.0f;      // 反動が戻る速さ
+
     [SerializeField, Header("UI")]
     public Image reloadGauge;           // リロードゲージのUI
 
@@ -35,9 +41,10 @@ public class BulletLauncher : MonoBehaviour
     public LayerMask ignoreLayer;       // Raycast時に無視するレイヤー
 
     // ======= 内部状態 =======
-    private int currentBullet;  // 現在の弾数
-    private string weaponName;  // 武器名(リロード管理用)
-
+    private int currentBullet;                          // 現在の弾数
+    private string weaponName;                          // 武器名(リロード管理用)
+    private Vector3 currentRecoilEuler = Vector3.zero;  // 現在の反動角度
+    private float lastShotTime = -999f;                 // クールタイム管理用
 
     void Start()
     {
@@ -57,32 +64,41 @@ public class BulletLauncher : MonoBehaviour
 
     void Update()
     {
-        // 発射処理(弾が残っているときのみ)
-        if (Input.GetKeyDown(KeyCode.Space) && currentBullet > 0)
+        if (IsGameManager.isGameEnded) return;
+
+        // === 反動の戻し処理 ===
+        if (recoilTarget != null)
         {
-            FireLauncher();
+            currentRecoilEuler = Vector3.Lerp(currentRecoilEuler, Vector3.zero, Time.deltaTime * recoilReturnSpeed);
+            Quaternion baseRotation = Quaternion.Euler(0f, -90f, 0f);
+            recoilTarget.localRotation = baseRotation * Quaternion.Euler(currentRecoilEuler);
         }
 
-        // 弾切れ時リロード開始
+        // === 発射処理（長押し対応＋クールタイム制御） ===
+        // 発射処理（長押し対応＋クールタイム制御＋弾数チェック）
+        if (Input.GetKey(KeyCode.Space)
+            && currentBullet > 0                            // 弾が残っている
+            && !WeaponReloadManager.IsReloading(weaponName) // リロード中でない
+            && Time.time - lastShotTime >= fireInterval)    // クールタイム経過
+        {
+            FireLauncher();
+            lastShotTime = Time.time;
+        }
+
+        // ===== 弾切れ時リロード開始 =====
         if (currentBullet <= 0 && !WeaponReloadManager.IsReloading(weaponName))
         {
             WeaponReloadManager.StartReload(
-                weaponName, // 武器名
-                reloadTime, // リロード時間
-                () =>
-                {    
-                    // リロード完了時の処理
-                    currentBullet = maxCapacity;                            // 弾数を最大に戻す
-                    if (reloadGauge != null) reloadGauge.fillAmount = 1.0f; // ゲージ満タン
-                },
-                reloadGauge // リロードゲージUI
+                weaponName,
+                reloadTime,
+                () => { currentBullet = maxCapacity; },
+                reloadGauge
             );
         }
 
-        // リロード中UI進捗
+        // ===== リロードUI更新 =====
         if (WeaponReloadManager.IsReloading(weaponName))
         {
-            // ゲージの進捗を更新
             if (reloadGauge != null)
                 reloadGauge.fillAmount = WeaponReloadManager.GetReloadProgress(weaponName);
             return;
@@ -124,10 +140,21 @@ public class BulletLauncher : MonoBehaviour
         if (rb != null)
             rb.velocity = direction * shootForce; // 弾に速度を与える
 
+        // 反動付与
+        if (recoilTarget != null)
+        {
+            Vector3 kick = new Vector3(
+                Random.Range(-recoilRotationStrength, -recoilRotationStrength / 2),
+                Random.Range(-recoilRotationStrength * 0.5f, recoilRotationStrength * 0.5f),
+                Random.Range(-recoilRotationStrength * 0.5f, recoilRotationStrength * 0.5f)
+            );
+            currentRecoilEuler += kick;
+        }
+
         // 弾の消滅
         Destroy(copy, deleteTime);
 
-        // 発射音があれば再生
+        // 発射音
         if (shotSE != null)
             audioSource.PlayOneShot(shotSE);
     }

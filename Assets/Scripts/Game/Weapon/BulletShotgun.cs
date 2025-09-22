@@ -18,8 +18,9 @@ public class BulletShotgun : MonoBehaviour
     [SerializeField, Header("弾設定")]
     public GameObject bullet;           // 弾のプレハブ
     public float shootForce = 20.0f;    // 弾の発射速度
-    public float deletetime = 2.0f;     // 弾の寿命(秒)
+    public float deleteTime = 2.0f;     // 弾の寿命(秒)
     public int maxCapacity = 5;         // 最大弾数
+    public float fireInterval = 0.5f;   // 発射間隔
 
     [SerializeField, Header("散弾の個数")]
     public int pelletCount = 9;
@@ -29,6 +30,11 @@ public class BulletShotgun : MonoBehaviour
 
     [SerializeField, Header("リロード時間")]
     public float reloadTime = 2.0f;     // リロード所要時間(秒)
+
+    [SerializeField, Header("反動設定")]
+    public Transform recoilTarget;              // 銃のモデル
+    public float recoilRotationStrength = 5.0f; // 反動の強さ(回転)
+    public float recoilReturnSpeed = 8.0f;      // 反動が戻る速さ
 
     [SerializeField, Header("UI")]
     public Image reloadGauge;           // リロードゲージのUI
@@ -41,8 +47,10 @@ public class BulletShotgun : MonoBehaviour
     public LayerMask ignoreLayer;       // Raycast時に無視するレイヤー
 
     // ======= 内部状態 =======
-    private int currentBullet;  // 現在の弾数
-    private string weaponName;  // 武器名(リロード管理用)
+    private int currentBullet;                          // 現在の弾数
+    private string weaponName;                          // 武器名(リロード管理用)
+    private Vector3 currentRecoilEuler = Vector3.zero;  // 現在の反動角度
+    private float lastShotTime = -999f;                 // クールタイム管理用
 
     void Start()
     {
@@ -62,27 +70,41 @@ public class BulletShotgun : MonoBehaviour
 
     void Update()
     {
-        // 発射
-        if (Input.GetKeyDown(KeyCode.Space) && currentBullet > 0)
+        if (IsGameManager.isGameEnded) return;
+
+        // === 反動の戻し処理 ===
+        if (recoilTarget != null)
         {
-            FireShotgun();
+            currentRecoilEuler = Vector3.Lerp(currentRecoilEuler, Vector3.zero, Time.deltaTime * recoilReturnSpeed);
+            Quaternion baseRotation = Quaternion.Euler(0f, -90f, 0f);
+            recoilTarget.localRotation = baseRotation * Quaternion.Euler(currentRecoilEuler);
         }
 
-        // 弾切れ時リロード開始
+        // === 発射処理 ===
+        if (Input.GetKey(KeyCode.Space) && currentBullet > 0)
+        {
+            // クールタイムチェック
+            if (Time.time - lastShotTime >= fireInterval)
+            {
+                FireShotgun();
+                lastShotTime = Time.time;
+            }
+        }
+
+        // ===== 弾切れ時リロード開始 =====
         if (currentBullet <= 0 && !WeaponReloadManager.IsReloading(weaponName))
         {
             WeaponReloadManager.StartReload(
-                weaponName, // 武器名
-                reloadTime, // リロード時間
+                weaponName,
+                reloadTime,
                 () => { currentBullet = maxCapacity; }, // リロード完了時に弾数を最大に
-                reloadGauge // リロードゲージUI
+                reloadGauge
             );
         }
 
-        // リロード中UI進捗
+        // ===== リロードUI更新 =====
         if (WeaponReloadManager.IsReloading(weaponName))
         {
-            // ゲージの進捗を更新
             if (reloadGauge != null)
                 reloadGauge.fillAmount = WeaponReloadManager.GetReloadProgress(weaponName);
             return;
@@ -111,11 +133,22 @@ public class BulletShotgun : MonoBehaviour
             if (rb != null)
                 rb.velocity = spreadDir * shootForce;
 
+            // 反動付与
+            if (recoilTarget != null)
+            {
+                Vector3 kick = new Vector3(
+                    Random.Range(-recoilRotationStrength, -recoilRotationStrength / 2),
+                    Random.Range(-recoilRotationStrength * 0.5f, recoilRotationStrength * 0.5f),
+                    Random.Range(-recoilRotationStrength * 0.5f, recoilRotationStrength * 0.5f)
+                );
+                currentRecoilEuler += kick;
+            }
+
             // 弾の消滅
-            Destroy(b, deletetime);
+            Destroy(b, deleteTime);
         }
 
-        // 発射音が設定されていれば再生
+        // 発射音
         if (shotSE != null)
             audioSource.PlayOneShot(shotSE);
     }

@@ -18,18 +18,29 @@ public class BulletMiniGun : MonoBehaviour
 
     [SerializeField, Header("弾設定")]
     public GameObject bullet;           // 弾のプレハブ
-    public float shootForce = 0.0f;     // 弾の発射速度
-    public float deleteTime = 0.0f;     // 弾の寿命(秒)
-    public int maxCapacity = 5;         // 最大弾数
+    public float shootForce = 100.0f;   // 弾の発射速度
+    public float deleteTime = 3.0f;     // 弾の寿命(秒)
+    public int maxCapacity = 40;        // 最大弾数
 
     [SerializeField, Header("リロード時間")]
     public float reloadTime = 2.0f;     // リロード所要時間(秒)
 
+    [SerializeField, Header("発射速度設定")]
+    public float maxInterval = 0.5f;   // 撃ち始めの遅い間隔
+    public float minInterval = 0.1f;   // 最高速度の間隔
+    public float spinUpTime = 2.0f;    // 加速にかかる時間
+
+    [SerializeField, Header("反動設定")]
+    public Transform recoilTarget;              // 銃のモデル
+    public float recoilRotationStrength = 1.5f; // 反動の強さ(回転)
+    public float recoilReturnSpeed = 10.0f;     // 反動が戻る速さ
+
+    [SerializeField, Header("後隙設定")]
+    public float cooldownAfterRelease = 0.5f; // 離した後のクールタイム
+    private float nextFireReadyTime = 0f;     // 次に撃てる時間
+
     [SerializeField, Header("UI")]
     public Image reloadGauge;           // リロードゲージのUI
-
-    [SerializeField, Header("発射間隔")]
-    public float fireInterval = 0.1f;   // 発射間隔(秒)
 
     [SerializeField, Header("効果音")]
     public AudioClip shotSE;
@@ -39,9 +50,11 @@ public class BulletMiniGun : MonoBehaviour
     public LayerMask ignoreLayer;       // Raycast時に無視するレイヤー
 
     // ======= 内部状態 =======
-    private int currentBullet;  // 現在の弾数
-    private string weaponName;  // 武器名(リロード管理用)
-    private float fireTimer = 0f;       // 発射間隔タイマー
+    private int currentBullet;                          // 現在の弾数
+    private string weaponName;                          // 武器名(リロード管理用)
+    private bool isShooting = false;                    // 発射中かどうか
+    private float shootStartTime;                       // 発射を開始した時間
+    private Vector3 currentRecoilEuler = Vector3.zero;  // 現在の反動角度
 
     // Start is called before the first frame update
     void Start()
@@ -58,27 +71,38 @@ public class BulletMiniGun : MonoBehaviour
         // リロードゲージを満タンに初期化
         if (reloadGauge != null)
             reloadGauge.fillAmount = 1.0f;
-
-        // 発射間隔タイマー初期化
-        fireTimer = fireInterval;
     }
 
     // Update is called once per frame
     void Update()
     {
-        fireTimer += Time.deltaTime; // 発射間隔タイマーを進める
+        if (IsGameManager.isGameEnded) return;
 
-        // 発射処理(弾が残っているときのみ)
-        if (Input.GetKey(KeyCode.Space) && currentBullet > 0 && !WeaponReloadManager.IsReloading(weaponName))
+        // ===== 銃の反動を戻す処理 =====
+        if (recoilTarget != null)
         {
-            if (fireTimer >= fireInterval)
-            {
-                FireMiniGun();
-                fireTimer = 0f; // タイマーリセット
-            }
+            currentRecoilEuler = Vector3.Lerp(currentRecoilEuler, Vector3.zero, Time.deltaTime * recoilReturnSpeed);
+            Quaternion baseRotation = Quaternion.Euler(0f, -90f, 0f);
+            recoilTarget.localRotation = baseRotation * Quaternion.Euler(currentRecoilEuler);
         }
 
-        // 弾切れ時リロード開始
+        // ===== 発射入力検出 =====
+        bool shootInput = Input.GetKey(KeyCode.Space);
+
+        if (shootInput && !isShooting && currentBullet > 0 && !WeaponReloadManager.IsReloading(weaponName) && Time.time >= nextFireReadyTime)
+        {
+            isShooting = true;
+            shootStartTime = Time.time;
+            StartCoroutine(ShootLoop());
+        }
+        else if (!shootInput && isShooting)
+        {
+            // 離した瞬間に後隙を発生
+            isShooting = false;
+            nextFireReadyTime = Time.time + cooldownAfterRelease;
+        }
+
+        // ===== 弾切れ時リロード開始 =====
         if (currentBullet <= 0 && !WeaponReloadManager.IsReloading(weaponName))
         {
             WeaponReloadManager.StartReload(
@@ -89,7 +113,7 @@ public class BulletMiniGun : MonoBehaviour
             );
         }
 
-        // リロード中UI進捗
+        // ===== リロードUI更新 =====
         if (WeaponReloadManager.IsReloading(weaponName))
         {
             if (reloadGauge != null)
@@ -99,41 +123,66 @@ public class BulletMiniGun : MonoBehaviour
     }
 
     /// <summary>
+    /// 発射処理のコルーチン
+    /// </summary>
+    private IEnumerator ShootLoop()
+    {
+        while (isShooting && currentBullet > 0 && !WeaponReloadManager.IsReloading(weaponName))
+        {
+            FireMiniGun();
+            currentBullet--;
+
+            if (currentBullet <= 0)
+            {
+                WeaponReloadManager.StartReload(
+                    weaponName,
+                    reloadTime,
+                    () => { currentBullet = maxCapacity; },
+                    reloadGauge
+                );
+                yield break;
+            }
+
+            // 経過時間から現在の連射速度を計算（スピンアップ処理）
+            float t = Mathf.Clamp01((Time.time - shootStartTime) / spinUpTime);
+            float currentInterval = Mathf.Lerp(maxInterval, minInterval, t);
+
+            yield return new WaitForSeconds(currentInterval);
+        }
+    }
+
+    /// <summary>
     /// 弾を発射する処理
     /// </summary>
     void FireMiniGun()
     {
-        currentBullet--; // 弾を１発消費
-
-        // カメラ中央からレイを飛ばし、ターゲット座標を取得
+        // カメラ中央からレイを飛ばす
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
-        RaycastHit hit;
         Vector3 targetPoint;
-        int layerMask = ignoreLayer.value != 0 ? ~ignoreLayer.value : Physics.DefaultRaycastLayers;
-
-        // Raycastが何かに当たった場合はその地点、当たらなければ遠方
-        if (Physics.Raycast(ray, out hit, 10000f, layerMask))
-        {
+        if (Physics.Raycast(ray, out RaycastHit hit, 10000f, ~ignoreLayer))
             targetPoint = hit.point;
-        }
         else
-        {
             targetPoint = ray.GetPoint(1000);
-        }
 
-        // 銃口からターゲットへの方向ベクトルを計算
         Vector3 direction = (targetPoint - shootPoint.position).normalized;
 
-        // 弾を生成（位置は銃口）
         GameObject copy = Instantiate(bullet, shootPoint.position, Quaternion.LookRotation(direction));
         Rigidbody rb = copy.GetComponent<Rigidbody>();
-        if (rb != null)
-            rb.velocity = direction * shootForce; // 弾に速度を与える
-
-        // 弾の消滅
+        if (rb != null) rb.velocity = direction * shootForce;
         Destroy(copy, deleteTime);
 
-        // 発射音があれば再生
+        // 反動付与
+        if (recoilTarget != null)
+        {
+            Vector3 randomKick = new Vector3(
+                Random.Range(-recoilRotationStrength, recoilRotationStrength),
+                Random.Range(-recoilRotationStrength, recoilRotationStrength),
+                0f
+            );
+            currentRecoilEuler += randomKick;
+        }
+
+        // 発射音
         if (shotSE != null)
             audioSource.PlayOneShot(shotSE);
     }
