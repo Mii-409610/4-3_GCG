@@ -10,6 +10,9 @@ public class ModelCreation : MonoBehaviour
     public int yCount = 0;
     public int zCount = 0;
 
+    [SerializeField, Header("オブジェクト名")]
+    public string cubesParentName = "BlockGrid";
+
     [SerializeField, Header("Cubeのプレハブ")]
     public GameObject cubePrefab;
 
@@ -19,6 +22,9 @@ public class ModelCreation : MonoBehaviour
     void Start()
     {
         GenerateBlockGrid();
+
+        // 自身を削除
+        Destroy(gameObject);
     }
 
     // Update is called once per frame
@@ -35,7 +41,8 @@ public class ModelCreation : MonoBehaviour
             return;
         }
 
-        cubesParent = new GameObject("BlockGrid");
+        // 親オブジェクトを作成
+        cubesParent = new GameObject(cubesParentName);
 
         // グリッドの原点(左下手前)を算出(中心座標基準)
         Vector3 origin = transform.position - new Vector3(
