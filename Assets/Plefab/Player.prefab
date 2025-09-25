@@ -51,10 +51,16 @@ MonoBehaviour:
   bullet: {fileID: 4054736688381230460, guid: 1bb59a27c8748e84cb2392535e60c72a, type: 3}
   shootForce: 100
   deleteTime: 3
-  maxCapacity: 10
+  maxCapacity: 40
   reloadTime: 2
+  maxInterval: 0.5
+  minInterval: 0.1
+  spinUpTime: 2
+  recoilTarget: {fileID: 606787857881466620}
+  recoilRotationStrength: 1.5
+  recoilReturnSpeed: 10
+  cooldownAfterRelease: 0.5
   reloadGauge: {fileID: 0}
-  fireInterval: 0.15
   shotSE: {fileID: 0}
   ignoreLayer:
     serializedVersion: 2
@@ -139,10 +145,14 @@ MonoBehaviour:
   shootPoint: {fileID: 6886173931078105043}
   playerCamera: {fileID: 6892420221991992408}
   bullet: {fileID: 4054736688381230460, guid: 1bb59a27c8748e84cb2392535e60c72a, type: 3}
-  shootForce: 40
-  deleteTime: 5
+  shootForce: 30
+  deleteTime: 3
   maxCapacity: 5
-  reloadTime: 2
+  fireInterval: 1.25
+  reloadTime: 4
+  recoilTarget: {fileID: 231068006962807999}
+  recoilRotationStrength: 5
+  recoilReturnSpeed: 8
   reloadGauge: {fileID: 0}
   shotSE: {fileID: 0}
   ignoreLayer:
@@ -416,12 +426,16 @@ MonoBehaviour:
   shootPoint: {fileID: 8053436068576046447}
   playerCamera: {fileID: 6892420221991992408}
   bullet: {fileID: 4054736688381230460, guid: 1bb59a27c8748e84cb2392535e60c72a, type: 3}
-  shootForce: 100
-  deletetime: 3
+  shootForce: 40
+  deleteTime: 3
   maxCapacity: 5
+  fireInterval: 0.75
   pelletCount: 9
   spreadAngle: 8
   reloadTime: 2
+  recoilTarget: {fileID: 4680415939970581655}
+  recoilRotationStrength: 3
+  recoilReturnSpeed: 8
   reloadGauge: {fileID: 0}
   shotSE: {fileID: 0}
   ignoreLayer:
@@ -506,6 +520,15 @@ MonoBehaviour:
   - {fileID: 5458360357245787693}
   - {fileID: 225302006116113478}
   - {fileID: 612273548224470533}
+  selectedWeaponUIs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  weaponUIs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  fadedAlpha: 0.7
 --- !u!1 &7086155302367307286
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,6 +541,7 @@ GameObject:
   - component: {fileID: 6892420221991992408}
   - component: {fileID: 1722436972249662040}
   - component: {fileID: 1108605145018141897}
+  - component: {fileID: 1899564218455774532}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -617,6 +641,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lookSensitivity: 5
   MinMaxAngle: {x: -65, y: 65}
+--- !u!114 &1899564218455774532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7086155302367307286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeTrigger: {fileID: 7430323495525846285}
+  volumeLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  stopNaNPropagation: 1
+  finalBlitToCameraTarget: 0
+  antialiasingMode: 0
+  temporalAntialiasing:
+    jitterSpread: 0.75
+    sharpness: 0.25
+    stationaryBlending: 0.95
+    motionBlending: 0.85
+  subpixelMorphologicalAntialiasing:
+    quality: 2
+  fastApproximateAntialiasing:
+    fastMode: 0
+    keepAlpha: 0
+  fog:
+    enabled: 1
+    excludeSkybox: 1
+  debugLayer:
+    lightMeter:
+      width: 512
+      height: 256
+      showCurves: 1
+    histogram:
+      width: 512
+      height: 256
+      channel: 3
+    waveform:
+      exposure: 0.12
+      height: 256
+    vectorscope:
+      size: 256
+      exposure: 0.12
+    overlaySettings:
+      linearDepth: 0
+      motionColorIntensity: 4
+      motionGridSize: 64
+      colorBlindnessType: 0
+      colorBlindnessStrength: 1
+  m_Resources: {fileID: 11400000, guid: d82512f9c8e5d4a4d938b575d47f88d4, type: 2}
+  m_ShowToolkit: 0
+  m_ShowCustomSorter: 0
+  breakBeforeColorGrading: 0
+  m_BeforeTransparentBundles: []
+  m_BeforeStackBundles: []
+  m_AfterStackBundles: []
 --- !u!1 &8499119793896089308
 GameObject:
   m_ObjectHideFlags: 0

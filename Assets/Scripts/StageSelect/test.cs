@@ -24,7 +24,7 @@ public class test : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (isHovered && Input.GetKeyDown(KeyCode.Space))
         {
-            SceneManager.LoadScene("stage1");
+            SceneManager.LoadScene("Stage1");
         }
     }
 }

@@ -38,7 +38,7 @@ public class CursorResult : MonoBehaviour
     {
         { "StageSelect", SceneToLoad.StageSelect },
         { "ReStart", SceneToLoad.RestartCurrent },
-        { "Debug", SceneToLoad.Stage1 },
+        { "Stage1", SceneToLoad.Stage1 },
         { "Stage2", SceneToLoad.Stage2 },
         { "Stage3", SceneToLoad.Stage3 },
     };
@@ -114,7 +114,7 @@ public class CursorResult : MonoBehaviour
         {
             case SceneToLoad.StageSelect: return "StageSelect";
             case SceneToLoad.RestartCurrent: return SceneManager.GetActiveScene().name;
-            case SceneToLoad.Stage1: return "Debug";
+            case SceneToLoad.Stage1: return "Stage1";
             case SceneToLoad.Stage2: return "Stage2";
             case SceneToLoad.Stage3: return "Stage3";
             default: return "";

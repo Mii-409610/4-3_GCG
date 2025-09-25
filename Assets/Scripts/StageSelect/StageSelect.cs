@@ -58,10 +58,10 @@ public class StageSelect : MonoBehaviour
         switch (stageType)
         {
             case StageType.Stage1:
-                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Debug");
+                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
                 break;
             case StageType.Stage2:
-                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Debug");
+                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
                 break;
             default:
                 Debug.LogWarning("未定義のステージです");
