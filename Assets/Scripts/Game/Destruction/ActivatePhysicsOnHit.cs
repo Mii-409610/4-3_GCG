@@ -2,39 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// オブジェクト破壊するためのクラス
+/// </summary>
 public class ActivatePhysicsOnHit : MonoBehaviour
 {
     private Rigidbody rb;
     private Collider col;
 
-    [SerializeField, Header("飛び散り設定")]
-    public float explosionForce = 5.0f;     // 衝撃の強さ
-    public float explosionRadius = 2.0f;    // 衝撃範囲
-    public float randomTorque = 1.0f;       // 回転の強さ
-    public float randomForce = 10.0f;       // ランダムな力の強さ
-
-    [SerializeField, Header("Bullet消滅までの時間(秒)")]
-    public float bulletDestroyDelay = 0.5f;
+    [HideInInspector] public float explosionForce;
+    [HideInInspector] public float explosionRadius;
+    [HideInInspector] public float randomTorque;
+    [HideInInspector] public float randomForce;
+    [HideInInspector] public float blockDestroyDelay;
+    [HideInInspector] public float bulletDestroyDelay;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
-
-        if (rb == null)
-        {
-            Debug.LogWarning("[ActivatePhysicsOnHit] Rigidbody が見つかりませんでした。");
-        }
-        if (col == null)
-        {
-            Debug.LogWarning("[ActivatePhysicsOnHit] Collider が見つかりませんでした。");
-        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
         // bulletとの衝突判定
-        if (collision.gameObject.CompareTag("Bullet")) // bullet はタグで判別
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             if (rb != null)
             {
@@ -42,7 +34,7 @@ public class ActivatePhysicsOnHit : MonoBehaviour
                 rb.isKinematic = false;
                 rb.useGravity = true;
 
-                // 当たった瞬間にコライダーを無効化
+                // コライダーを無効化
                 if(col != null)
                 {
                     col.enabled = false;
@@ -64,8 +56,11 @@ public class ActivatePhysicsOnHit : MonoBehaviour
                     Random.Range(-randomTorque, randomTorque)
                 );
                 rb.AddTorque(torque, ForceMode.Impulse);
+
+                // オブジェクトを削除
+                Destroy(gameObject, blockDestroyDelay);
             }
-            // 衝突した弾丸を削除
+            // 弾も削除
             StartCoroutine(DestroyBulletAfterDelay(collision.gameObject));
         }
     }
