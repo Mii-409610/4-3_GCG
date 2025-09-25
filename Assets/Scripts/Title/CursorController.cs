@@ -19,6 +19,7 @@ public class CursorController : MonoBehaviour
     [SerializeField, Header("弾のスピード")]
     private float bulletSpeed = 20.0f;
 
+
     void Awake()
     {
         // エラー処理
@@ -45,7 +46,7 @@ public class CursorController : MonoBehaviour
     void Start()
     {
         // カーソルを中心に合わせる
-        Cursor.SetCursor(cursor, new Vector2(cursor.width / 2, cursor.height / 2), CursorMode.ForceSoftware);
+        //Cursor.SetCursor(cursor, new Vector2(cursor.width / 2, cursor.height / 2), CursorMode.ForceSoftware);
     }
 
     // Update is called once per frame
@@ -53,8 +54,9 @@ public class CursorController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            Shot();
+            //Shot();
         }
+
     }
 
     /// <summary>

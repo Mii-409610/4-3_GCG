@@ -36,42 +36,25 @@ public class StageSelect : MonoBehaviour
     {
         isZooming = true;
 
-        //// モーションブラーON
-        //if (postProcessVolume != null)
-        //{
-        //    postProcessVolume.weight = 1.0f;
-        //    //Debug.Log("ズーム開始");
-        //}
-
         FindObjectOfType<ZoomEffect>().ShowSpeedLines();
 
         Vector3 startPos = mainCamera.transform.position;
-        Quaternion startRot = mainCamera.transform.rotation;
 
-        Vector3 direction = (transform.position - startPos).normalized;
+        // カメラの正面方向（向きを変えない）
+        Vector3 direction = mainCamera.transform.forward;
+
+        // アイコンが中央に来るような位置へ調整
+        // → アイコンからカメラの正面方向に zoomDistance だけ離れた位置へ移動
         Vector3 targetPos = transform.position - direction * zoomDistance;
-        Quaternion targetRot = Quaternion.LookRotation(transform.position - targetPos);
 
         float t = 0;
         while (t < 1)
         {
             t += Time.deltaTime * zoomSpeed;
             mainCamera.transform.position = Vector3.Lerp(startPos, targetPos, t);
-            mainCamera.transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
             yield return null;
         }
 
-        ////テスト
-        //Time.timeScale = 0;
-        //yield break;
-
-        //yield return new WaitForSeconds(0.5f);
-
-        // モーションブラーOFF（演出終了後）
-        //if (postProcessVolume != null)
-        //    postProcessVolume.weight = 0f;
-
-        // ステージに応じてシーンを読み込み
         switch (stageType)
         {
             case StageType.Stage1:

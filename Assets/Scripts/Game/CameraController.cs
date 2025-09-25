@@ -34,6 +34,9 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        //挙動を停止
+        if (IsGameManager.isGameEnded) return;
+
         // マウス入力の取得
         yRotation += Input.GetAxis("Mouse X") * lookSensitivity; //マウスの移動.
         xRotation -= Input.GetAxis("Mouse Y") * lookSensitivity; //マウスの移動.
@@ -43,9 +46,17 @@ public class CameraController : MonoBehaviour
 
         // 現在のx,y回転角度を目標角度に向けて、徐々に近づける
         currentXRot = Mathf.SmoothDamp(currentXRot, xRotation, ref xRotationVelocity, lookSmooth);
-        currentYRot = Mathf.SmoothDamp(currentYRot, yRotation, ref yRotationVelocity, lookSmooth);
+        currentYRot = Mathf.LerpAngle(currentYRot, yRotation, Time.deltaTime * (1f / lookSmooth));
 
         // 回転
         transform.rotation = Quaternion.Euler(currentXRot, currentYRot, 0);
+
+        if (float.IsNaN(currentXRot) || float.IsNaN(currentYRot))
+        {
+            Debug.LogError($"NaN発生！ currentXRot:{currentXRot}, currentYRot:{currentYRot}, " +
+                           $"xRotation:{xRotation}, yRotation:{yRotation}, " +
+                           $"velX:{xRotationVelocity}, velY:{yRotationVelocity}");
+        }
+
     }
 }

@@ -36,13 +36,13 @@ public class StageSelectManager : MonoBehaviour
 #if UNITY_EDITOR
     void Update()
     {
-        // テスト用：Tabキーでセーブデータ初期化
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            PlayerPrefs.DeleteAll();
-            Debug.Log("PlayerPrefs 初期化！");
-            SceneManager.LoadScene("StageSelect");
-        }
+        //// テスト用：Tabキーでセーブデータ初期化
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    PlayerPrefs.DeleteAll();
+        //    Debug.Log("PlayerPrefs 初期化！");
+        //    SceneManager.LoadScene("StageSelect");
+        //}
     }
 #endif
 }

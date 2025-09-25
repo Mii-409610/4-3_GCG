@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Goal : MonoBehaviour
 {
     [SerializeField] GameObject resultUI;  // InspectorでResult UIパネルを入れる
-    //[SerializeField] Score scoreManager;   // スコア表示したいときに使う
+    [SerializeField] GameObject scoreUI;   // スコア表示したいときに使う
 
     public bool test = false;
 
@@ -18,32 +19,38 @@ public class Goal : MonoBehaviour
         if (resultUI != null)
         {
             resultUI.SetActive(false);
+
         }
     }
 
     void Update()
     {
-        if (test == true && Input.GetKeyDown(KeyCode.Return))
-        {
-            // 物理挙動の再開
-            Time.timeScale = 1f;
+        //if (test == true && Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    PlayerPrefs.SetInt("Stage1Cleared", 1);
+        //    PlayerPrefs.Save();
 
-            // ストップオフ
-            IsGameManager.isGameEnded = false;
+        //    // 物理挙動の再開
+        //    Time.timeScale = 1f;
 
-            PlayerPrefs.SetInt("Stage1Cleared", 1);
-            PlayerPrefs.Save();
-
-            SceneManager.LoadScene("StageSelect");
-        }
+        //    // ストップオフ
+        //    IsGameManager.isGameEnded = false;
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
     {
+
         if (other.CompareTag("Player"))
         {
-            // スコア保存
-            //if (scoreManager != null) scoreManager.SaveScore();
+
+            // 念のため非表示にしておく
+            if (scoreUI != null)
+            {
+                scoreUI.SetActive(false);
+            }
+
+            Debug.Log("ゴールした");
 
             // リザルトUI表示
             if (resultUI != null) resultUI.SetActive(true);
