@@ -7,11 +7,14 @@ using UnityEngine;
 /// </summary>
 public class BlockPhysicsSetup : MonoBehaviour
 {
+    [SerializeField, Header("”ÍˆÍ”j‰ó‚Ì”¼Œa")]
+    public float destroyNeighborRadius = 5.0f;
+
     [SerializeField, Header("”ò‚ÑU‚èİ’è")]
-    public float explosionForce = 5.0f;     // ÕŒ‚‚Ì‹­‚³
-    public float explosionRadius = 2.0f;    // ÕŒ‚”ÍˆÍ
-    public float randomTorque = 1.0f;       // ‰ñ“]‚Ì‹­‚³
-    public float randomForce = 10.0f;       // ƒ‰ƒ“ƒ_ƒ€‚È—Í‚Ì‹­‚³
+    public float explosionForce = 1.0f;     // ÕŒ‚‚Ì‹­‚³
+    public float explosionRadius = 0.5f;    // ÕŒ‚”ÍˆÍ
+    public float randomTorque = 0.3f;       // ‰ñ“]‚Ì‹­‚³
+    public float randomForce = 1.0f;       // ƒ‰ƒ“ƒ_ƒ€‚È—Í‚Ì‹­‚³
 
     [SerializeField, Header("Á–Å‚Ü‚Å‚ÌŠÔ")]
     public float blockDestroyDelay = 2.0f;
@@ -46,6 +49,7 @@ public class BlockPhysicsSetup : MonoBehaviour
             }
 
             // BlockPhysicsSetup‚Ì’l‚ğq‚ÌActivatePhysicsOnHit‚É“n‚·
+            apoh.destroyNeighborRadius = destroyNeighborRadius;
             apoh.explosionForce = explosionForce;
             apoh.explosionRadius = explosionRadius;
             apoh.randomTorque = randomTorque;

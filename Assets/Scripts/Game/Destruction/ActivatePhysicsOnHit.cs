@@ -10,6 +10,7 @@ public class ActivatePhysicsOnHit : MonoBehaviour
     private Rigidbody rb;
     private Collider col;
 
+    [HideInInspector] public float destroyNeighborRadius;
     [HideInInspector] public float explosionForce;
     [HideInInspector] public float explosionRadius;
     [HideInInspector] public float randomTorque;
@@ -28,40 +29,51 @@ public class ActivatePhysicsOnHit : MonoBehaviour
         // bulletとの衝突判定
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            if (rb != null)
+            // 範囲破壊
+            if (destroyNeighborRadius > 0f)
             {
-                // 物理挙動を有効化
-                rb.isKinematic = false;
-                rb.useGravity = true;
+                Vector3 hitPos = collision.contacts[0].point;
+                Collider[] neighbors = Physics.OverlapSphere(hitPos, destroyNeighborRadius);
 
-                // コライダーを無効化
-                if(col != null)
+                foreach (var neighbor in neighbors)
                 {
-                    col.enabled = false;
+                    // ActivatePhysicsOnHitがついているブロックのみ
+                    var apoh = neighbor.GetComponent<ActivatePhysicsOnHit>();
+                    if (apoh != null && apoh != this)
+                    {
+                        apoh.BreakNeighborBlock(hitPos);
+                    }
                 }
-
-                // 爆発的な力を与える
-                Vector3 explosionPos = collision.contacts[0].point;
-                rb.AddExplosionForce(explosionForce, explosionPos, explosionRadius, 0.5f, ForceMode.Impulse);
-
-                // ランダムな力を加える
-                Vector3 randDir = Random.onUnitSphere; // ランダム方向
-                rb.AddForce(randDir * randomForce, ForceMode.Impulse);
-
-                // ランダムな回転力を加える
-                rb.maxAngularVelocity = 100f; // 最大角速度を増加
-                Vector3 torque = new Vector3(
-                    Random.Range(-randomTorque, randomTorque),
-                    Random.Range(-randomTorque, randomTorque),
-                    Random.Range(-randomTorque, randomTorque)
-                );
-                rb.AddTorque(torque, ForceMode.Impulse);
-
-                // オブジェクトを削除
-                Destroy(gameObject, blockDestroyDelay);
             }
+            // 破壊処理
+            BreakNeighborBlock(collision.contacts[0].point);
+
             // 弾も削除
             StartCoroutine(DestroyBulletAfterDelay(collision.gameObject));
+        }
+    }
+
+    public void BreakNeighborBlock(Vector3 explosionPos)
+    {
+        if(rb != null)
+        {
+            // 物理挙動を有効化
+            rb.isKinematic = false;
+            rb.useGravity = true;
+
+            // コライダーを無効化
+            if (col != null)
+            {
+                col.enabled = false;
+            }
+
+            rb.AddExplosionForce(explosionForce, explosionPos, explosionRadius, 0.5f, ForceMode.Impulse);
+            rb.AddForce(Random.onUnitSphere * randomForce, ForceMode.Impulse);
+            rb.maxAngularVelocity = 100f;
+            rb.AddTorque(Random.insideUnitSphere * randomTorque, ForceMode.Impulse);
+
+            // オブジェクトを削除
+            Destroy(gameObject, blockDestroyDelay);
         }
     }
 
