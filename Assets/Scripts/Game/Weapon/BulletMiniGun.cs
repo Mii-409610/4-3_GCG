@@ -77,6 +77,7 @@ public class BulletMiniGun : MonoBehaviour
     void Update()
     {
         if (IsGameManager.isGameEnded) return;
+        if (PouseManager.isPaused) return;
 
         // ===== e‚Ì”½“®‚ğ–ß‚·ˆ— =====
         if (recoilTarget != null)

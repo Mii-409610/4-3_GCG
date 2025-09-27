@@ -15,7 +15,7 @@ public class PouseDisplay : MonoBehaviour
     public GameObject VolumeObject;
     public GameObject HelpObject;
     public GameObject Mouse;
-    //public GameObject Cursor;
+    public GameObject Controller;
     public Image Cursor;
 
     int cooltime = 0;
@@ -31,6 +31,7 @@ public class PouseDisplay : MonoBehaviour
         VolumeObject.SetActive(false);
         HelpObject.SetActive(false);
         Mouse.SetActive(mouse);
+        Controller.SetActive(!mouse);
         Cursor.enabled = true;
     }
     public void OptionChange()
@@ -59,6 +60,7 @@ public class PouseDisplay : MonoBehaviour
     {
         mouse = !CorM.Controller;
         Mouse.SetActive(mouse);
+        Controller.SetActive(!mouse);
     }
 
     private void Update()

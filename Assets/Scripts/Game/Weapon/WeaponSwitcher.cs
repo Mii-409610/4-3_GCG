@@ -32,6 +32,8 @@ public class WeaponSwitcher : MonoBehaviour
 
     void Update()
     {
+
+        if (PouseManager.isPaused) return;
         // •ŠíØ‚è‘Ö‚¦“ü—Í
         HandleWeaponSwitchInput();
     }

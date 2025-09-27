@@ -36,6 +36,7 @@ public class CameraController : MonoBehaviour
     {
         //挙動を停止
         if (IsGameManager.isGameEnded) return;
+        if (PouseManager.isPaused) return;
 
         // マウス入力の取得
         yRotation += Input.GetAxis("Mouse X") * lookSensitivity; //マウスの移動.

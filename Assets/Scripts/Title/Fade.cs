@@ -19,7 +19,9 @@ public class Fade : MonoBehaviour
     public enum Scene
     {
         Title,
-        Game,
+        StageSelect,
+        Game1,
+        Game2,
         Result
     }
     [Header("ÉVÅ[ÉìëJà⁄êÊ")]
@@ -139,7 +141,13 @@ public class Fade : MonoBehaviour
                     case Scene.Title:
                         SceneManager.LoadScene("Title Scene");
                         break;
-                    case Scene.Game:
+                    case Scene.StageSelect:
+                        SceneManager.LoadScene("StageSelect");
+                        break;
+                    case Scene.Game1:
+                        SceneManager.LoadScene("Stage1");
+                        break;
+                    case Scene.Game2:
                         SceneManager.LoadScene("Stage1");
                         break;
                     case Scene.Result:
@@ -192,8 +200,8 @@ public class Fade : MonoBehaviour
             case 65: uiImage[3].SetActive(true);
                 canvas.transform.position = new Vector3(923.0f, 524.0f, -610.0f); break;
             case 80: uiImage[4].SetActive(true); break;
-            //case 110: FindObjectOfType<PouseManager>()?.Resume();
-            //    SceneManager.LoadScene(SceneManager.GetActiveScene().name); break;
+            case 110: FindObjectOfType<PouseManager>()?.Resume();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name); break;
             default: break;
         }
     }
@@ -210,8 +218,8 @@ public class Fade : MonoBehaviour
             case 65: uiImage[3].SetActive(true);
                 canvas.transform.position = new Vector3(923.0f, 524.0f, -610.0f); break;
             case 80: uiImage[4].SetActive(true); break;
-            //case 110: FindObjectOfType<PouseManager>()?.Resume();
-            //SceneManager.LoadScene("Title Scene");break;
+            case 110: FindObjectOfType<PouseManager>()?.Resume();
+            SceneManager.LoadScene("Title Scene");break;
             default: break;
         }
     }

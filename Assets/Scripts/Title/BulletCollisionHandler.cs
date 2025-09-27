@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// 弾がオブジェクトに衝突したときの処理を行うクラス
@@ -136,23 +135,23 @@ public class BulletCollisionHandler : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Bullet"))
+        /*if (collision.gameObject.CompareTag("Bullet"))
         {
             //Debug.Log($"弾が{type}ボタンに当たった");
             if (Ondisplay.display == false)
             {
-                switch (ctype)// タイトル
+                switch (type)// タイトル
                 {
-                    case OptionType.Start:
+                    case ButtonType.Start:
                         FindObjectOfType<Fade>()?.Tchange();// 初めから
                         break;
-                    case OptionType.Continue:
+                    case ButtonType.Continue:
                         // 続きから
                         break;
-                    case OptionType.Setting:
+                    case ButtonType.Setting:
                         FindObjectOfType<Fade>()?.SChange();// オプション
                         break;
-                    case OptionType.Exit:
+                    case ButtonType.Exit:
 #if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false;// ゲームを終了
 #else
@@ -163,24 +162,24 @@ public class BulletCollisionHandler : MonoBehaviour
             }
             else
             {
-                switch (ctype) // オプション
+                switch (type) // オプション
                 {
-                    case OptionType.Start:
+                    case ButtonType.Start:
                         // 音量調整
                         break;
-                    case OptionType.Continue:
+                    case ButtonType.Continue:
                         FindObjectOfType<CorM>()?.OperatorChange();// 操作変更
                         break;
-                    case OptionType.Setting:
+                    case ButtonType.Setting:
                         // 遊び方
                         break;
-                    case OptionType.Exit:
+                    case ButtonType.Exit:
                         FindObjectOfType<Fade>()?.SChange();// 戻る
                         break;
                 }
             }
 
             Destroy(collision.gameObject);
-        }
+        }*/
     }
 }

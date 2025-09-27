@@ -65,6 +65,7 @@ public class BulletLauncher : MonoBehaviour
     void Update()
     {
         if (IsGameManager.isGameEnded) return;
+        if (PouseManager.isPaused) return;
 
         // === ”½“®‚Ì–ß‚µˆ— ===
         if (recoilTarget != null)

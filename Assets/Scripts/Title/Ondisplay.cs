@@ -15,7 +15,7 @@ public class Ondisplay : MonoBehaviour
     public GameObject VolumeObject;
     public GameObject HelpObject;
     public GameObject Mouse;
-    //public GameObject Cursor;
+    public GameObject Controller;
     public Image Cursor;
 
     int cooltime = 0;
@@ -31,6 +31,7 @@ public class Ondisplay : MonoBehaviour
         VolumeObject.SetActive(false);
         HelpObject.SetActive(false);
         Mouse.SetActive(!CorM.Controller);
+        Controller.SetActive(CorM.Controller);
         Cursor.enabled = true;
     }
     public void OptionChange()
@@ -59,6 +60,7 @@ public class Ondisplay : MonoBehaviour
     {
         mouse = !mouse;
         Mouse.SetActive(mouse);
+        Controller.SetActive(!mouse);
     }
 
     private void Update()

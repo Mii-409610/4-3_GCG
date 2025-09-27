@@ -66,6 +66,8 @@ public class WeaponReloadManager : MonoBehaviour
 
     void Update()
     {
+
+        if (PouseManager.isPaused) return;
         foreach (var pair in reloadTable)
         {
             var info = pair.Value;
