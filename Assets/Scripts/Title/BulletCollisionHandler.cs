@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// 弾がオブジェクトに衝突したときの処理を行うクラス
@@ -34,7 +35,7 @@ public class BulletCollisionHandler : MonoBehaviour
         {
             if (Ondisplay.volume == false && Ondisplay.help == false)
             {
-                if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxis("Vertical1") <= -1 || Input.GetAxis("Vertical2") <= -1)
+                if (Input.GetKeyDown(KeyCode.DownArrow) /*|| Input.GetAxis("Vertical1") <= -1 || Input.GetAxis("Vertical2") <= -1*/)
                 {
                     if (ctype != OptionType.Exit)
                     {
@@ -48,7 +49,7 @@ public class BulletCollisionHandler : MonoBehaviour
                     }
                 }
 
-                if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxis("Vertical1") >= 1 || Input.GetAxis("Vertical2") >= 1))
+                if (Input.GetKeyDown(KeyCode.UpArrow) /*|| Input.GetAxis("Vertical1") >= 1 || Input.GetAxis("Vertical2") >= 1*/)
                 {
                     if (ctype != OptionType.Start)
                     {
@@ -70,10 +71,8 @@ public class BulletCollisionHandler : MonoBehaviour
                 {
                     switch (ctype)
                     {
-                        case OptionType.Start: FindObjectOfType<Fade>()?.Tchange();
-                            PlayerPrefs.DeleteAll();
-                            break; // 初めから
-                        case OptionType.Continue: FindObjectOfType<Fade>()?.Tchange(); break; // 続きから
+                        case OptionType.Start: FindObjectOfType<Fade>()?.Tchange(); break; // 初めから
+                        case OptionType.Continue: break; // 続きから
                         case OptionType.Setting: FindObjectOfType<Fade>()?.SChange(); break; // タイトル→オプション
                         case OptionType.Exit:
 #if UNITY_EDITOR
@@ -137,23 +136,23 @@ public class BulletCollisionHandler : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        /*if (collision.gameObject.CompareTag("Bullet"))
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             //Debug.Log($"弾が{type}ボタンに当たった");
             if (Ondisplay.display == false)
             {
-                switch (type)// タイトル
+                switch (ctype)// タイトル
                 {
-                    case ButtonType.Start:
+                    case OptionType.Start:
                         FindObjectOfType<Fade>()?.Tchange();// 初めから
                         break;
-                    case ButtonType.Continue:
+                    case OptionType.Continue:
                         // 続きから
                         break;
-                    case ButtonType.Setting:
+                    case OptionType.Setting:
                         FindObjectOfType<Fade>()?.SChange();// オプション
                         break;
-                    case ButtonType.Exit:
+                    case OptionType.Exit:
 #if UNITY_EDITOR
                         UnityEditor.EditorApplication.isPlaying = false;// ゲームを終了
 #else
@@ -164,24 +163,24 @@ public class BulletCollisionHandler : MonoBehaviour
             }
             else
             {
-                switch (type) // オプション
+                switch (ctype) // オプション
                 {
-                    case ButtonType.Start:
+                    case OptionType.Start:
                         // 音量調整
                         break;
-                    case ButtonType.Continue:
+                    case OptionType.Continue:
                         FindObjectOfType<CorM>()?.OperatorChange();// 操作変更
                         break;
-                    case ButtonType.Setting:
+                    case OptionType.Setting:
                         // 遊び方
                         break;
-                    case ButtonType.Exit:
+                    case OptionType.Exit:
                         FindObjectOfType<Fade>()?.SChange();// 戻る
                         break;
                 }
             }
 
             Destroy(collision.gameObject);
-        }*/
+        }
     }
 }
