@@ -1,99 +1,130 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
-/// スコア表示用のUIの制御を行うマネージャークラス
+/// スコア表示用のUIの制御を行うクラス
 /// </summary>
 public class ScoreManager : MonoBehaviour
 {
-    // 子オブジェクトにアタッチされたScoreUIを格納する配列
-    private ScoreUI[] score;
+    public static ScoreManager Instance { get; private set; } // シングルトンインスタンス
 
-     void Start()
+    [SerializeField, Header("各桁のスコア表示用UI")] 
+    public Image[] digitImages; // 右端から左端へ
+
+    [SerializeField, Header("0～9の画像")]
+    public Sprite[] numberSprites;
+
+    private int targetScore = 0;    // 最終的なスコア
+    private int displayScore = 0;   // 表示用スコア
+
+    private Coroutine scoreCoroutine; // スコア加算演出用コルーチン
+
+    void Awake()
     {
-        // 子オブジェクトの数に合わせて配列のサイズを調整
-        Array.Resize(ref score, transform.childCount);
-
-        // ScoreUIを取得して配列に格納
-        for(int i = 0; i < transform.childCount; i++)
+        if(Instance == null)
         {
-            score[i] = transform.GetChild(i).GetComponent<ScoreUI>();
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        if (digitImages == null || digitImages.Length == 0)
+        {
+            Debug.LogError("ScoreManager: digitImagesが設定されていません。Imageを割り当ててください。");
+        }
+        if(numberSprites == null || numberSprites.Length != 10)
+        {
+            Debug.LogError("ScoreManager: numberSpritesが設定されていません。Spriteを割り当ててください。");
         }
     }
 
     /// <summary>
-    /// スコアの数値を渡して、各行ごとにUIを更新する処理
+    /// スコア加算処理
     /// </summary>
-    /// <param name="scoreValue">スコアの数値</param>
-    public void OnUpdateScore(int scoreValue)
+    public void AddScore(int value)
     {
-        int digit = scoreValue;
+        targetScore += value;
 
-        // 各行の値を取り出して、対応するScoreUIに渡す
-        for (int i = 0; i < transform.childCount; i++)
+        // スコア加算演出
+        if(scoreCoroutine != null)
         {
-            // 1の位、10の位、100の位...の順に処理
-            score[i].OnUpdateScore(digit % 10);
-            digit = digit / 10;
+            StopCoroutine(scoreCoroutine);
         }
+        scoreCoroutine = StartCoroutine(ScoreCountUp(0.5f));
     }
+
+    /// <summary>
+    /// スコア加算演出用コルーチン
+    /// </summary>
+    private IEnumerator ScoreCountUp(float duration)
+    {
+        float elapsed = 0f;
+        int startScore = displayScore;
+        int diff = targetScore - startScore;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            displayScore = startScore + Mathf.RoundToInt(diff + t);
+            ShowScore(displayScore);
+            yield return null;
+        }
+        displayScore = targetScore; // 最終値に合わせる
+        ShowScore(displayScore);    // 最終表示
+        scoreCoroutine = null;
+    }
+
     void Update()
     {
-        // 毎フレーム固定スコアを表示
-        OnUpdateScore(357);
+        ShowScore(displayScore);
+    }
+
+    /// <summary>
+    /// スコア表示処理
+    /// </summary>
+    public void ShowScore(int value)
+    {
+        displayScore = Mathf.Max(0, value); // スコア値を0以上に補正
+
+        // 全桁を非表示
+        foreach(var image in digitImages)
+        {
+            image.enabled = false;
+        }
+
+        // スコアが0の場合は一桁目に0表示
+        if (value == 0)
+        {
+            digitImages[0].sprite = numberSprites[0];
+            digitImages[0].enabled = true;
+            return;
+        }
+
+        int tempScore = displayScore;   // 表示用の一時変数
+        int digitsUsed = 0;             // 使った桁数(右端から)
+
+        // スコアの桁が上がったら次の桁表示
+        do
+        {
+            int digit = tempScore % 10; // 1の位から順番に取得
+
+            // 該当画像をセット
+            digitImages[digitsUsed].sprite = numberSprites[digit];
+
+            digitImages[digitsUsed].enabled = true; // 桁を表示
+            tempScore /= 10;                        // 次の桁へ
+            digitsUsed++;                           // 桁数カウント 
+        }
+        while (tempScore > 0 && digitsUsed < digitImages.Length);
+    }
+
+    public int GetScore()
+    {
+        return targetScore;
     }
 }
-
-
-//using System;
-//using UnityEngine;
-//using UnityEngine.UI;
-
-//public class ScoreManager : MonoBehaviour
-//{
-//    // 各桁のスコア表示用UI Image（10個用意）
-//    public Image[] digitImages = new Image[10];
-
-//    // 数字（0〜9）のスプライト画像（10個）
-//    public Sprite[] numberSprites = new Sprite[10];
-
-//    // 現在のスコア値（整数）
-//    public int score = 0;
-
-//    // 他のスクリプトからスコアを加算できるようにする関数（未実装）
-//    internal static void AddScore(int v)
-//    {
-//        throw new NotImplementedException(); // あとで実装予定
-//    }
-
-//    // ゲーム開始時にスコアを一度表示する
-//    void Start()
-//    {
-//        UpdateScoreDisplay();
-//    }
-
-//    // 毎フレーム呼ばれる（スペースキーでデバッグ表示）
-//    void Update()
-//    {
-//        if (Input.GetKeyDown(KeyCode.Space))
-//        {
-//            UpdateScoreDisplay(); // スコア表示を更新
-//        }
-//    }
-
-//    // スコア値に応じてImageを更新する処理
-//    void UpdateScoreDisplay()
-//    {
-//        // スコアを10桁文字列に変換（例：0000000123）
-//        string scoreStr = score.ToString().PadLeft(10, '0');
-
-//        // 各桁ごとにスプライトを設定
-//        for (int i = 0; i < 10; i++)
-//        {
-//            int digit = int.Parse(scoreStr[i].ToString()); // 文字を数値に変換
-//            digitImages[i].sprite = numberSprites[digit];  // 該当する数字のスプライトを設定
-//        }
-//    }
-//}

@@ -9,6 +9,7 @@ public class ActivatePhysicsOnHit : MonoBehaviour
 {
     private Rigidbody rb;
     private Collider col;
+    private bool hasScored = false; // スコア加算済みフラグ
 
     [HideInInspector] public float destroyNeighborRadius;
     [HideInInspector] public float explosionForce;
@@ -67,10 +68,24 @@ public class ActivatePhysicsOnHit : MonoBehaviour
                 col.enabled = false;
             }
 
+            // 力を加える
             rb.AddExplosionForce(explosionForce, explosionPos, explosionRadius, 0.5f, ForceMode.Impulse);
+
+            // ランダムな力と回転を加える
             rb.AddForce(Random.onUnitSphere * randomForce, ForceMode.Impulse);
+
+            // 回転速度の上限を設定
             rb.maxAngularVelocity = 100f;
+
+            // 回転を加える
             rb.AddTorque(Random.insideUnitSphere * randomTorque, ForceMode.Impulse);
+
+            // スコア加算処理
+            if ((!hasScored && ScoreManager.Instance != null))
+            {
+                ScoreManager.Instance.AddScore(1);
+                hasScored = true;
+            }
 
             // オブジェクトを削除
             Destroy(gameObject, blockDestroyDelay);

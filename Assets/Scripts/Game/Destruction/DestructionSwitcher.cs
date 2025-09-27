@@ -13,6 +13,15 @@ public class DestructionSwitcher : MonoBehaviour
 
     void Awake()
     {
+        if(dividedObject == null)
+        {
+            Debug.LogError("DestructionSwitcher: dividedObject‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
+            return;
+        }
+    }
+
+    void Start()
+    {
         // Rigidbody’Ç‰Á
         rb = GetComponent<Rigidbody>();
         if(rb == null)
