@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Effekseer; // Effekseerを使うため追加
 
 /// <summary>
 /// オブジェクト破壊するためのクラス
@@ -18,6 +19,9 @@ public class ActivatePhysicsOnHit : MonoBehaviour
     [HideInInspector] public float randomForce;
     [HideInInspector] public float blockDestroyDelay;
     [HideInInspector] public float bulletDestroyDelay;
+    [HideInInspector] public EffekseerEffectAsset destroyEffect;
+    [HideInInspector] public float effectScale = 1.0f;
+    [HideInInspector] public float effectDuration = 1.0f;
 
     void Awake()
     {
@@ -30,10 +34,11 @@ public class ActivatePhysicsOnHit : MonoBehaviour
         // bulletとの衝突判定
         if (collision.gameObject.CompareTag("Bullet"))
         {
+            Vector3 hitPos = collision.contacts[0].point;
+
             // 範囲破壊
             if (destroyNeighborRadius > 0f)
             {
-                Vector3 hitPos = collision.contacts[0].point;
                 Collider[] neighbors = Physics.OverlapSphere(hitPos, destroyNeighborRadius);
 
                 foreach (var neighbor in neighbors)
@@ -46,17 +51,30 @@ public class ActivatePhysicsOnHit : MonoBehaviour
                     }
                 }
             }
-            // 破壊処理
-            BreakNeighborBlock(collision.contacts[0].point);
 
-            // 弾も削除
+            // 破壊処理
+            BreakNeighborBlock(hitPos);
+
+            // エフェクト再生
+            if (destroyEffect != null)
+            {
+                EffekseerHandle handle = EffekseerSystem.PlayEffect(destroyEffect, hitPos);
+                handle.SetScale(new Vector3(effectScale, effectScale, effectScale));
+
+                // 表示時間を制御
+                if (effectDuration > 0f)
+                {
+                    StartCoroutine(StopEffectAfterDelay(handle, effectDuration));
+                }
+            }
+            // 弾削除
             StartCoroutine(DestroyBulletAfterDelay(collision.gameObject));
         }
     }
 
     public void BreakNeighborBlock(Vector3 explosionPos)
     {
-        if(rb != null)
+        if (rb != null)
         {
             // 物理挙動を有効化
             rb.isKinematic = false;
@@ -98,6 +116,17 @@ public class ActivatePhysicsOnHit : MonoBehaviour
         if (bulletObj != null)
         {
             Destroy(bulletObj);
+        }
+    }
+
+    // エフェクトを一定時間で止める
+    private IEnumerator StopEffectAfterDelay(EffekseerHandle handle, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (handle.exists)
+        {
+            handle.Stop();
         }
     }
 }

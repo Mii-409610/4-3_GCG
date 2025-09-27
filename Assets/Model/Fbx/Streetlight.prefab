@@ -70,14 +70,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b396c1c53df2b8a4d98b280fab67c304, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -5949136572592193004}
+      addedObject: {fileID: 1122364365176040704}
   m_SourcePrefab: {fileID: 100100000, guid: b396c1c53df2b8a4d98b280fab67c304, type: 3}
 --- !u!1 &3778504580129885317 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b396c1c53df2b8a4d98b280fab67c304, type: 3}
   m_PrefabInstance: {fileID: 4084369263674601940}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-5949136572592193004
+--- !u!114 &1122364365176040704
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,3 +96,6 @@ MonoBehaviour:
   randomForce: 1
   blockDestroyDelay: 2
   bulletDestroyDelay: 0.5
+  destroyEffect: {fileID: 11400000, guid: b8b4657b60b649e40915ec5e5d5b27ee, type: 2}
+  effectScale: 1
+  effectDuration: 2
