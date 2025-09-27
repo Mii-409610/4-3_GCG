@@ -7,6 +7,11 @@ TagManager:
   - Bullet
   - Start
   - Exit
+  - ReStart
+  - StageSelect
+  - Title
+  - Stage1
+  - Stage2
   layers:
   - Default
   - TransparentFX

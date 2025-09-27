@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class SceneChanger : MonoBehaviour
 {
     // ‘JˆÚæ‚ÌƒV[ƒ“–¼
-    //private string nextSceneName = "Debug";
+    //private string nextSceneName = "Stage1";
 
     void Start()
     {

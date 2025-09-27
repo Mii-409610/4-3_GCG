@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class CursorFollorwer : MonoBehaviour
 {
-    public RectTransform followTarget; // ’Ç]‚·‚é‰æ‘œiRectTransformj
-    public Image cursorImage;          // ƒJ[ƒ\ƒ‹‚ÌImageiF‚ğ•Ï‚¦‚é—pj
+    public RectTransform followTarget; // è¿½å¾“ã™ã‚‹ç”»åƒï¼ˆRectTransformï¼‰
+    public Image cursorImage;          // ã‚«ãƒ¼ã‚½ãƒ«ã®Imageï¼ˆè‰²ã‚’å¤‰ãˆã‚‹ç”¨ï¼‰
     public Color defaultColor = Color.white;
     public Color hoverColor = Color.red;
 
@@ -17,18 +17,18 @@ public class CursorFollorwer : MonoBehaviour
 
     void Update()
     {
-        // 1. ƒ}ƒEƒXˆÊ’u‚ÉƒJ[ƒ\ƒ‹UI‚ğˆÚ“®
+        // 1. ãƒã‚¦ã‚¹ä½ç½®ã«ã‚«ãƒ¼ã‚½ãƒ«UIã‚’ç§»å‹•
         Vector2 mousePosition = Input.mousePosition;
         followTarget.position = mousePosition;
 
-        // 2. ƒ}ƒEƒXˆÊ’u‚©‚çRay‚ğ”ò‚Î‚·iƒJƒƒ‰‘O•ûŒüj
+        // 2. ãƒã‚¦ã‚¹ä½ç½®ã‹ã‚‰Rayã‚’é£›ã°ã™ï¼ˆã‚«ãƒ¡ãƒ©å‰æ–¹å‘ï¼‰
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
-            // 3. ƒqƒbƒg‚µ‚½ƒIƒuƒWƒFƒNƒg‚ª"Stage1,2"‚È‚çF‚ğ•Ï‚¦‚é
-            if (hit.collider.CompareTag("Stage1")|| hit.collider.CompareTag("Stage2"))
+            // 3. ãƒ’ãƒƒãƒˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒ"Stage1,2"ãªã‚‰è‰²ã‚’å¤‰ãˆã‚‹
+            if (hit.collider.CompareTag("Stage1")|| hit.collider.CompareTag("Stage2") || hit.collider.CompareTag("Title"))
             {
                 cursorImage.color = hoverColor;
             }

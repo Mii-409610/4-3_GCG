@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//using UnityEngine.Rendering.PostProcessing;//ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[‚É•K—v
 
 public class StageSelect : MonoBehaviour
 {
@@ -16,13 +15,16 @@ public class StageSelect : MonoBehaviour
 
     public enum StageType
     {
-        //ƒXƒe[ƒWƒZƒŒƒNƒg‚Ì—ñ‹“Œ^
+        //ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆã®åˆ—æŒ™å‹
+        Title,
         Stage1,
         Stage2,
+        Stage3,
+        Stage4,
         
     }
 
-    public StageType stageType; // © Inspector‚Å‘I‚×‚é
+    public StageType stageType; // â† Inspectorã§é¸ã¹ã‚‹
 
     public void TriggerZoom()
     {
@@ -40,11 +42,11 @@ public class StageSelect : MonoBehaviour
 
         Vector3 startPos = mainCamera.transform.position;
 
-        // ƒJƒƒ‰‚Ì³–Ê•ûŒüiŒü‚«‚ğ•Ï‚¦‚È‚¢j
+        // ã‚«ãƒ¡ãƒ©ã®æ­£é¢æ–¹å‘ï¼ˆå‘ãã‚’å¤‰ãˆãªã„ï¼‰
         Vector3 direction = mainCamera.transform.forward;
 
-        // ƒAƒCƒRƒ“‚ª’†‰›‚É—ˆ‚é‚æ‚¤‚ÈˆÊ’u‚Ö’²®
-        // ¨ ƒAƒCƒRƒ“‚©‚çƒJƒƒ‰‚Ì³–Ê•ûŒü‚É zoomDistance ‚¾‚¯—£‚ê‚½ˆÊ’u‚ÖˆÚ“®
+        // ã‚¢ã‚¤ã‚³ãƒ³ãŒä¸­å¤®ã«æ¥ã‚‹ã‚ˆã†ãªä½ç½®ã¸èª¿æ•´
+        // â†’ ã‚¢ã‚¤ã‚³ãƒ³ã‹ã‚‰ã‚«ãƒ¡ãƒ©ã®æ­£é¢æ–¹å‘ã« zoomDistance ã ã‘é›¢ã‚ŒãŸä½ç½®ã¸ç§»å‹•
         Vector3 targetPos = transform.position - direction * zoomDistance;
 
         float t = 0;
@@ -57,15 +59,42 @@ public class StageSelect : MonoBehaviour
 
         switch (stageType)
         {
+            case StageType.Title:
+                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Title Scene");
+                break;
             case StageType.Stage1:
                 FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
                 break;
             case StageType.Stage2:
                 FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
                 break;
-            default:
-                Debug.LogWarning("–¢’è‹`‚ÌƒXƒe[ƒW‚Å‚·");
+            case StageType.Stage3:
+                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
+                break;
+            case StageType.Stage4:
+                FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
                 break;
         }
+
+        // ãƒãƒ¼ã‚¸å…ˆã§ã®Stage1ã‚·ãƒ¼ãƒ³é·ç§»å‡¦ç†ï¼ˆã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆï¼‰
+        // switch (stageType)
+        // {
+        //     case StageType.Title:
+        //         FindObjectOfType<SelectFadeOut>().StartSceneTransition("Title Scene");
+        //         break;
+
+        //     case StageType.Stage1:
+        //         FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage1");
+        //         break;
+        //     case StageType.Stage2:
+        //         FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage2");
+        //         break;
+        //     case StageType.Stage3:
+        //         FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage3");
+        //         break;
+        //     case StageType.Stage4:
+        //         FindObjectOfType<SelectFadeOut>().StartSceneTransition("Stage4");
+        //         break;
+        // }
     }
 }
