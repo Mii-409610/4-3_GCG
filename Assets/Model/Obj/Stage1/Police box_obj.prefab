@@ -50,10 +50,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1e02f72f47ccfe948b2a2ef777a707b0, type: 3}
       propertyPath: m_Name
-      value: Kouban
+      value: Police box_obj
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 1e02f72f47ccfe948b2a2ef777a707b0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3264306079791442561}
   m_SourcePrefab: {fileID: 100100000, guid: 1e02f72f47ccfe948b2a2ef777a707b0, type: 3}
+--- !u!1 &1572577909089522869 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 1e02f72f47ccfe948b2a2ef777a707b0, type: 3}
+  m_PrefabInstance: {fileID: 7250313227325018429}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3264306079791442561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572577909089522869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa5db54946ba20347a57e79348160514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dividedObject: {fileID: 0}

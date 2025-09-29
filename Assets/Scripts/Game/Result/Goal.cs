@@ -52,6 +52,11 @@ public class Goal : MonoBehaviour
 
             Debug.Log("ゴールした");
 
+            // スコアを保存
+            int score = ScoreManager.Instance.GetScore();
+            PlayerPrefs.SetInt("LastScore", score);
+            PlayerPrefs.Save();
+
             // リザルトUI表示
             if (resultUI != null) resultUI.SetActive(true);
 

@@ -84,15 +84,20 @@ public class ScoreManager : MonoBehaviour
         ShowScore(displayScore);
     }
 
+    public void ShowScore(int value)
+    {
+        ShowScore(value, digitImages, numberSprites);
+    }
+
     /// <summary>
     /// スコア表示処理
     /// </summary>
-    public void ShowScore(int value)
+    public void ShowScore(int value, Image[] digitImagesTarget, Sprite[] sprites)
     {
         displayScore = Mathf.Max(0, value); // スコア値を0以上に補正
 
         // 全桁を非表示
-        foreach(var image in digitImages)
+        foreach(var image in digitImagesTarget)
         {
             image.enabled = false;
         }
@@ -100,8 +105,8 @@ public class ScoreManager : MonoBehaviour
         // スコアが0の場合は一桁目に0表示
         if (value == 0)
         {
-            digitImages[0].sprite = numberSprites[0];
-            digitImages[0].enabled = true;
+            digitImagesTarget[0].sprite = sprites[0];
+            digitImagesTarget[0].enabled = true;
             return;
         }
 
@@ -114,13 +119,13 @@ public class ScoreManager : MonoBehaviour
             int digit = tempScore % 10; // 1の位から順番に取得
 
             // 該当画像をセット
-            digitImages[digitsUsed].sprite = numberSprites[digit];
+            digitImagesTarget[digitsUsed].sprite = sprites[digit];
 
-            digitImages[digitsUsed].enabled = true; // 桁を表示
+            digitImagesTarget[digitsUsed].enabled = true; // 桁を表示
             tempScore /= 10;                        // 次の桁へ
             digitsUsed++;                           // 桁数カウント 
         }
-        while (tempScore > 0 && digitsUsed < digitImages.Length);
+        while (tempScore > 0 && digitsUsed < digitImagesTarget.Length);
     }
 
     public int GetScore()

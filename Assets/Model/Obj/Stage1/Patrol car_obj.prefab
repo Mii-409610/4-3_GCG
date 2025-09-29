@@ -50,10 +50,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f69f9dadff3016a49b6cadb8fffbfd60, type: 3}
       propertyPath: m_Name
-      value: Patrol
+      value: Patrol car_obj
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: f69f9dadff3016a49b6cadb8fffbfd60, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4957943609667823526}
   m_SourcePrefab: {fileID: 100100000, guid: f69f9dadff3016a49b6cadb8fffbfd60, type: 3}
+--- !u!1 &7751879481522941431 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: f69f9dadff3016a49b6cadb8fffbfd60, type: 3}
+  m_PrefabInstance: {fileID: 1934462481082493055}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4957943609667823526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7751879481522941431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa5db54946ba20347a57e79348160514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dividedObject: {fileID: 0}
