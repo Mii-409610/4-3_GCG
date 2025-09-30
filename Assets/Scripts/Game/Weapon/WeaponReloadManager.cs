@@ -66,8 +66,8 @@ public class WeaponReloadManager : MonoBehaviour
 
     void Update()
     {
-
         if (PouseManager.isPaused) return;
+
         foreach (var pair in reloadTable)
         {
             var info = pair.Value;
@@ -90,6 +90,9 @@ public class WeaponReloadManager : MonoBehaviour
                     // Š®—¹ƒQ[ƒW–ƒ^ƒ“
                     if (info.reloadGauge != null)
                         info.reloadGauge.fillAmount = 1.0f;
+
+                    // SEÄ¶
+                    AudioManager.Instance.PlaySE(SEID.SE_Reload);
                 }
             }
         }

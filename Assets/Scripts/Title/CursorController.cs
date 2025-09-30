@@ -47,6 +47,9 @@ public class CursorController : MonoBehaviour
     {
         // カーソルを中心に合わせる
         //Cursor.SetCursor(cursor, new Vector2(cursor.width / 2, cursor.height / 2), CursorMode.ForceSoftware);
+
+        // BGM再生
+        AudioManager.Instance.PlayBGM(BGMID.BGM_Title);
     }
 
     // Update is called once per frame

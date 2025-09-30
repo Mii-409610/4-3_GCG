@@ -21,6 +21,12 @@ public class Goal : MonoBehaviour
             resultUI.SetActive(false);
 
         }
+
+        // SEí‚é~
+        AudioManager.Instance.StopAllSE();
+
+        // BGMí‚é~
+        AudioManager.Instance.StopBGM();
     }
 
     void Update()
@@ -82,6 +88,9 @@ public class Goal : MonoBehaviour
             PlayerPrefs.Save();
 
             test = true;
+
+            // BGMçƒê∂
+            AudioManager.Instance.PlayBGM(BGMID.BGM_Clear);
         }
     }
 

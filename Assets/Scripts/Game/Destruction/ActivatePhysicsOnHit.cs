@@ -55,6 +55,9 @@ public class ActivatePhysicsOnHit : MonoBehaviour
             // 破壊処理
             BreakNeighborBlock(hitPos);
 
+            // SE再生
+            AudioManager.Instance.PlaySE(SEID.SE_VoxelDestroy);
+
             // エフェクト再生
             if (destroyEffect != null)
             {
@@ -67,6 +70,7 @@ public class ActivatePhysicsOnHit : MonoBehaviour
                     StartCoroutine(StopEffectAfterDelay(handle, effectDuration));
                 }
             }
+
             // 弾削除
             StartCoroutine(DestroyBulletAfterDelay(collision.gameObject));
         }

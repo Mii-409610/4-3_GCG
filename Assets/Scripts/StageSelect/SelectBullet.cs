@@ -31,5 +31,8 @@ public class SelectBullet : MonoBehaviour
         {
             rb.velocity = ray.direction * bulletSpeed;
         }
+
+        // SEçƒê∂
+        AudioManager.Instance.PlaySE(SEID.SE_ReticuleDecision);
     }
 }

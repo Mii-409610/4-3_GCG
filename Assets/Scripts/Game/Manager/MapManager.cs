@@ -50,7 +50,9 @@ public class MapManager : MonoBehaviour
             }
             Instantiate(LandObjects[i], pos, Quaternion.identity);
         }
-}
+
+        AudioManager.Instance.PlayBGM(BGMID.BGM_Stage1);
+    }
 
     // Update is called once per frame
     void Update()

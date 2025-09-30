@@ -33,10 +33,6 @@ public class BulletLauncher : MonoBehaviour
     [SerializeField, Header("UI")]
     public Image reloadGauge;           // リロードゲージのUI
 
-    [SerializeField, Header("効果音")]
-    public AudioClip shotSE;            // 発射音
-    private AudioSource audioSource;    // 効果音再生用
-
     [SerializeField, Header("無視するレイヤー")]
     public LayerMask ignoreLayer;       // Raycast時に無視するレイヤー
 
@@ -53,9 +49,6 @@ public class BulletLauncher : MonoBehaviour
 
         // 弾数を最大にセット
         currentBullet = maxCapacity;
-
-        // AudioSourceを取得(なければ追加)
-        audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
 
         // リロードゲージを満タンに初期化
         if (reloadGauge != null)
@@ -155,8 +148,7 @@ public class BulletLauncher : MonoBehaviour
         // 弾の消滅
         Destroy(copy, deleteTime);
 
-        // 発射音
-        if (shotSE != null)
-            audioSource.PlayOneShot(shotSE);
+        // SE再生
+        AudioManager.Instance.PlaySE(SEID.SE_Launcher);
     }
 }

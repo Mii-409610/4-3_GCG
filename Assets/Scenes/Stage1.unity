@@ -6411,6 +6411,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1846983233076904235, guid: 605a37f009983b34cb48082477e7df86, type: 3}
+      propertyPath: shotSE
+      value: 
+      objectReference: {fileID: 8300000, guid: c686b01b94fa30c499fe459f72030512, type: 3}
+    - target: {fileID: 1846983233076904235, guid: 605a37f009983b34cb48082477e7df86, type: 3}
       propertyPath: reloadGauge
       value: 
       objectReference: {fileID: 924199476}

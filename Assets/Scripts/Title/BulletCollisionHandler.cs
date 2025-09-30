@@ -70,7 +70,13 @@ public class BulletCollisionHandler : MonoBehaviour
                 {
                     switch (ctype)
                     {
-                        case OptionType.Start: FindObjectOfType<Fade>()?.Tchange(); break; // 初めから
+                        case OptionType.Start: 
+                            FindObjectOfType<Fade>()?.Tchange();
+
+                            //// BGM停止
+                            //AudioManager.Instance.StopBGM();
+
+                            break; // 初めから
                         case OptionType.Continue: break; // 続きから
                         case OptionType.Setting: FindObjectOfType<Fade>()?.SChange(); break; // タイトル→オプション
                         case OptionType.Exit:
@@ -95,6 +101,8 @@ public class BulletCollisionHandler : MonoBehaviour
                     }
                 }
 
+                // SE再生
+                AudioManager.Instance.PlaySE(SEID.SE_ButtonDecision);
             }
         }
         else

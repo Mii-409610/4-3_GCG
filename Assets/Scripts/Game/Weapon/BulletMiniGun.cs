@@ -42,10 +42,6 @@ public class BulletMiniGun : MonoBehaviour
     [SerializeField, Header("UI")]
     public Image reloadGauge;           // リロードゲージのUI
 
-    [SerializeField, Header("効果音")]
-    public AudioClip shotSE;
-    private AudioSource audioSource;
-
     [SerializeField, Header("無視するレイヤー")]
     public LayerMask ignoreLayer;       // Raycast時に無視するレイヤー
 
@@ -64,9 +60,6 @@ public class BulletMiniGun : MonoBehaviour
 
         // 弾数を最大にセット
         currentBullet = maxCapacity;
-
-        // AudioSourceを取得または追加
-        audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
 
         // リロードゲージを満タンに初期化
         if (reloadGauge != null)
@@ -183,8 +176,7 @@ public class BulletMiniGun : MonoBehaviour
             currentRecoilEuler += randomKick;
         }
 
-        // 発射音
-        if (shotSE != null)
-            audioSource.PlayOneShot(shotSE);
+        // SE再生
+        AudioManager.Instance.PlaySE(SEID.SE_Minigun);
     }
 }

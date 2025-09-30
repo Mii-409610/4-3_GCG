@@ -111,6 +111,8 @@ public class CursorManager : MonoBehaviour
                     }
                 }
 
+                // SEçƒê∂
+                AudioManager.Instance.PlaySE(SEID.SE_ButtonDecision);
             }
         }
         else

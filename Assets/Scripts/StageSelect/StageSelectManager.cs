@@ -33,6 +33,9 @@ public class StageSelectManager : MonoBehaviour
             else
                 cloudClearEffect.ResetClouds(); // Œ³‚ÌˆÊ’u‚É–ß‚µ‚Ä•\¦
         }
+
+        // BGMÄ¶
+        AudioManager.Instance.PlayBGM(BGMID.BGM_StageSelect);
     }
 
 #if UNITY_EDITOR

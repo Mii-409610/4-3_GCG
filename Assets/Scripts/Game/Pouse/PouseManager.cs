@@ -31,6 +31,9 @@ public class PouseManager : MonoBehaviour
         isPaused = false;
         //Physics.autoSimulation = !PouseManager.isPaused;
         Time.timeScale = 1f;
+
+        // SEçƒê∂
+        AudioManager.Instance.PlaySE(SEID.SE_OpenMenu);
     }
 
     public void Pause()// É|Å[ÉYíÜ
@@ -40,5 +43,8 @@ public class PouseManager : MonoBehaviour
         isPaused = true;
         //Physics.autoSimulation = !PouseManager.isPaused;
         Time.timeScale = 0f;
+
+        // SEçƒê∂
+        AudioManager.Instance.PlaySE(SEID.SE_OpenMenu);
     }
 }

@@ -67,6 +67,9 @@ public class WeaponSwitcher : MonoBehaviour
         // インデックスを循環させる
         int nextIndex = (currentWeaponIndex + direction + weapons.Length) % weapons.Length;
         SetWeaponActive(nextIndex);
+
+        // SE再生
+        AudioManager.Instance.PlaySE(SEID.SE_WeaponChange);
     }
 
     /// <summary>

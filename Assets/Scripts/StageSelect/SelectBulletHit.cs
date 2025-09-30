@@ -16,6 +16,9 @@ public class SelectBulletHit : MonoBehaviour
             // Titleタグの場合は直接フェードアウト→シーン遷移
             FindObjectOfType<SelectFadeOut>().StartSceneTransition("Title Scene");
             Destroy(gameObject); // 弾を削除
+
+            // SE再生
+            AudioManager.Instance.PlaySE(SEID.SE_Decision);
         }
         else if (other.CompareTag("Stage2")|| other.CompareTag("Stage1"))
         {

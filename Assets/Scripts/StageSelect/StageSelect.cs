@@ -21,7 +21,6 @@ public class StageSelect : MonoBehaviour
         Stage2,
         Stage3,
         Stage4,
-        
     }
 
     public StageType stageType; // ← Inspectorで選べる
